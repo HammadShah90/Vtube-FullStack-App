@@ -30,6 +30,7 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   padding: 18px 26px;
+  padding-top: 0px;
   overflow-y: auto;
   max-height: 100vh;
 `;
@@ -39,15 +40,19 @@ const Logo = styled.div`
   align-items: center;
   gap: 5px;
   font-weight: bold;
-  margin-bottom: 20px;
+  // margin-bottom: 20px;
+  padding: 18px 0px;
   font-size: 22px;
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #ffffff
 `;
 
 const Ctry = styled.span`
   position: absolute;
   right: 120px;
-  bottom: 15px;
+  bottom: 33px;
   font-weight: normal;
   font-size: 10px;
 `;
@@ -63,6 +68,8 @@ const Item = styled.div`
   cursor: pointer;
   padding: 7.5px 0px;
   font-weight: 500;
+  position: relative;
+  z-index: 1;
 `;
 
 const Hr = styled.hr`
