@@ -20,7 +20,7 @@ import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightne
 import { Link } from "react-router-dom";
 
 const Container = styled.div`
-  flex: 1;
+  flex: 0.8;
   background-color: ${({ theme }) => theme.bgLighter};
   height: 100vh;
   color: ${({ theme }) => theme.text};
@@ -46,12 +46,12 @@ const Logo = styled.div`
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: #ffffff
+  background-color: ${({theme}) => theme.bgLighter};
 `;
 
 const Ctry = styled.span`
   position: absolute;
-  right: 120px;
+  right: 72px;
   bottom: 33px;
   font-weight: normal;
   font-size: 10px;
@@ -115,10 +115,12 @@ const Menu = ({ darkMode, setDarkMode }) => {
             <Ctry>PK</Ctry>
           </Logo>
         </Link>
-        <Item>
-          <HomeIcon />
-          <Span>Home</Span>
-        </Item>
+        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item>
+            <HomeIcon />
+            <Span>Home</Span>
+          </Item>
+        </Link>
         <Item>
           <ExploreOutlinedIcon />
           <Span>Explore</Span>

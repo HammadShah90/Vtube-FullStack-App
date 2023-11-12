@@ -4,3 +4,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+::placeholder {
+  color: #3b3b3b;
+}
