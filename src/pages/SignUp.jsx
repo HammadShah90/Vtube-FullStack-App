@@ -2,10 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import { Link } from "react-router-dom";
-
 
 const Container = styled.div`
   display: flex;
@@ -46,6 +45,13 @@ const Input = styled.input`
   width: inherit;
   font-size: 14px;
 `;
+
+const Name = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+`;
+
 const Button = styled.button`
   border: none;
   background-color: #ff000d;
@@ -53,6 +59,7 @@ const Button = styled.button`
   color: white;
   border-radius: 15px;
   cursor: pointer;
+  width: inherit;
 
   &:hover {
     background-color: #fa464f;
@@ -64,6 +71,7 @@ const ButtonBox = styled.div`
   justify-content: space-between;
   width: 100%;
   margin-top: 20px;
+  gap: 10px;
 `;
 const More = styled.div``;
 
@@ -72,6 +80,16 @@ const SignUp = () => {
     <Container>
       <Wrapper>
         <Title>Sign up</Title>
+        <Name>
+          <InputBox>
+            <PersonOutlineOutlinedIcon />
+            <Input type="text" placeholder="First name" />
+          </InputBox>
+          <InputBox>
+            <PersonOutlineOutlinedIcon />
+            <Input type="text" placeholder="Last name" />
+          </InputBox>
+        </Name>
         <InputBox>
           <PersonOutlineOutlinedIcon />
           <Input type="text" placeholder="Username" />
@@ -83,16 +101,16 @@ const SignUp = () => {
         <InputBox>
           <PasswordOutlinedIcon />
           <Input type="password" placeholder="Password" />
-          <VisibilityOutlinedIcon />
+          <VisibilityOutlinedIcon style={{ cursor: "pointer" }} />
         </InputBox>
         <InputBox>
           <PasswordOutlinedIcon />
           <Input type="password" placeholder="Confirm Password" />
-          <VisibilityOutlinedIcon />
+          <VisibilityOutlinedIcon style={{ cursor: "pointer" }} />
         </InputBox>
         <ButtonBox>
           <Button>Sign Up</Button>
-          <Link to="/signin" style={{ textDecoration: "none" }}>
+          <Link to="/signin" style={{ textDecoration: "none", width: "100%" }}>
             <Button>Login</Button>
           </Link>
         </ButtonBox>

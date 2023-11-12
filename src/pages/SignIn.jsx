@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { Link } from "react-router-dom";
 
 const Container = styled.div`
@@ -22,6 +22,7 @@ const Wrapper = styled.div`
   padding: 20px 50px;
   gap: 10px;
   border-radius: 15px;
+  width: 500px;
 `;
 
 const InputBox = styled.div`
@@ -51,6 +52,7 @@ const Button = styled.button`
   color: white;
   border-radius: 15px;
   cursor: pointer;
+  width: inherit;
 
   &:hover {
     background-color: #fa464f;
@@ -60,12 +62,14 @@ const Button = styled.button`
 const ButtonBox = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   margin-top: 20px;
+  gap: 10px;
 `;
 const Text = styled.p`
   margin-top: 10px;
-  align-self: flex-start;
+  align-self: flex-end;
   color: ${({ theme }) => theme.textSoft};
   font-size: 14px;
   cursor: pointer;
@@ -88,16 +92,16 @@ const SignIn = () => {
         <InputBox>
           <PasswordOutlinedIcon />
           <Input type="password" placeholder="Password" />
-          <VisibilityOutlinedIcon />
+          <VisibilityOutlinedIcon style={{ cursor: "pointer" }} />
         </InputBox>
         <InputBox>
           <PasswordOutlinedIcon />
           <Input type="password" placeholder="Confirm Password" />
-          <VisibilityOutlinedIcon />
+          <VisibilityOutlinedIcon style={{ cursor: "pointer" }} />
         </InputBox>
         <Text>Forgot Password?</Text>
         <ButtonBox>
-          <Link to="/signup" style={{ textDecoration: "none" }}>
+          <Link to="/signup" style={{ textDecoration: "none", width: "100%" }}>
             <Button>Sign Up</Button>
           </Link>
           <Button>Login</Button>
