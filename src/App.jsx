@@ -3,12 +3,13 @@ import { useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Menu from "./components/Menu";
 import Navbar from "./components/Navbar";
-import "./App.css";
 import { darkTheme, lightTheme } from "./utils/Theme";
 import Home from './pages/Home';
 import Video from './pages/Video';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import "./App.css";
+
 
 const Container = styled.div`
   display: flex;

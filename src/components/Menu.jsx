@@ -119,7 +119,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
               <p
                 style={{
                   position: "absolute",
-                  bottom: 4,
+                  bottom: 0,
                   fontWeight: "normal",
                   fontSize: 10,
                   backgroundColor: red

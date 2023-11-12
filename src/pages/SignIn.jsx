@@ -84,7 +84,7 @@ const SignIn = () => {
   return (
     <Container>
       <Wrapper>
-        <Title>Sign in</Title>
+        <Title>Welcome to Vtube</Title>
         <InputBox>
           <PersonOutlineOutlinedIcon />
           <Input type="text" placeholder="Username" />

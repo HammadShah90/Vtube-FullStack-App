@@ -6,7 +6,7 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  padding-top: 10px
+  padding-top: 10px;
 `;
 
 const Home = () => {
