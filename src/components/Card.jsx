@@ -5,7 +5,7 @@ import companyLogo from "../assets/companyLogo.jpg";
 import { Link } from "react-router-dom";
 
 const Container = styled.div`
-  width: 300px;
+  width: 335px;
   margin-bottom: ${({ type }) => (type === "sm" ? "10px" : "45px")};
   cursor: pointer;
   display: ${({ type }) => type === "sm" && "flex"};

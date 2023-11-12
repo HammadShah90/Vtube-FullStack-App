@@ -27,6 +27,7 @@ const Details = styled.div`
 const Name = styled.h4`
   display: flex;
   align-items: center;
+  margin-top: 5px;
   margin-right: 10px;
   font-size: 13px;
   font-weight: 500;
@@ -75,10 +76,7 @@ const Comment = () => {
           @Hammad Shah <Date>1 day ago</Date>
         </Name>
         <Text>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eaque
-          commodi ipsum sapiente molestias, mollitia dolor ipsa minus asperiores
-          dolorum ea ab minima, sunt temporibus. Vitae dolor placeat veritatis
-          in consectetur!
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. A fugit architecto cumque, nulla voluptatum veritatis animi commodi blanditiis nihil excepturi perferendis tempora? Vitae distinctio fugiat modi veniam quidem quia molestias.
         </Text>
         <Box>
           <Like>

@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   position: sticky;
@@ -21,7 +22,7 @@ const Wrapper = styled.div`
 `;
 
 const Search = styled.div`
-  width: 40%;
+  width: 45%;
   position: absolute;
   left: 0px;
   right: 0px;
@@ -29,9 +30,10 @@ const Search = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px;
+  padding: 5px 10px;
   border: 1px solid #ccc;
-  border-radius: 3px;
+  border-radius: 50px;
+  color: ${({ theme }) => theme.text};
 `;
 
 const Input = styled.input`
@@ -40,6 +42,11 @@ const Input = styled.input`
   outline: none;
   color: ${({ theme }) => theme.text};
   padding: 5px;
+  width: 100%;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.textSoft};
+  }
 `;
 
 const Button = styled.button`
@@ -61,13 +68,15 @@ const Navbar = () => {
     <Container>
       <Wrapper>
         <Search>
-          <Input placeholder="Search..." />
-          <SearchOutlinedIcon />
+          <Input placeholder="Search any video..." />
+          <SearchOutlinedIcon style={{cursor: "pointer"}}/>
         </Search>
-        <Button>
-          <AccountCircleOutlinedIcon />
-          SIGN IN
-        </Button>
+        <Link to="signin" style={{ textDecoration: "none" }}>
+          <Button>
+            <AccountCircleOutlinedIcon />
+            SIGN IN
+          </Button>
+        </Link>
       </Wrapper>
     </Container>
   );

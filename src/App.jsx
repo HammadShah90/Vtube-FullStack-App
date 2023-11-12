@@ -7,6 +7,8 @@ import "./App.css";
 import { darkTheme, lightTheme } from "./utils/Theme";
 import Home from './pages/Home';
 import Video from './pages/Video';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
 
 const Container = styled.div`
   display: flex;
@@ -35,6 +37,8 @@ function App() {
               <Wrapper>
                 <Routes>
                   <Route path="/" element={<Home />} />
+                  <Route path='/signin' element={<SignIn />} />
+                  <Route path='/signup' element={<SignUp />} />
                   <Route path="/video/:id" element={<Video />} />
                 </Routes>
               </Wrapper>

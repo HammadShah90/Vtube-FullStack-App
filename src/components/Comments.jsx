@@ -5,6 +5,7 @@ import Comment from "./Comment";
 
 const Container = styled.div`
   margin-top: 30px;
+  padding: 0px 5px;
 `;
 
 const NewComment = styled.div`
@@ -29,6 +30,10 @@ const Input = styled.input`
   padding: 5px;
   width: 100%;
   font-size: 14px;
+
+  &::placeholder {
+    color: ${({theme}) => theme.textSoft};
+  }
 `;
 
 const Comments = () => {

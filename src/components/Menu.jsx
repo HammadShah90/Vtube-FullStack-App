@@ -18,6 +18,7 @@ import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import { Link } from "react-router-dom";
+import { red } from "@mui/material/colors";
 
 const Container = styled.div`
   flex: 0.8;
@@ -40,21 +41,17 @@ const Logo = styled.div`
   align-items: center;
   gap: 5px;
   font-weight: bold;
-  // margin-bottom: 20px;
+  // margin-left: 5px;
   padding: 18px 0px;
   font-size: 22px;
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: ${({theme}) => theme.bgLighter};
+  background-color: ${({ theme }) => theme.bgLighter};
 `;
 
 const Ctry = styled.span`
-  position: absolute;
-  right: 72px;
-  bottom: 33px;
-  font-weight: normal;
-  font-size: 10px;
+  position: relative;
 `;
 
 const Img = styled.img`
@@ -66,10 +63,16 @@ const Item = styled.div`
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  padding: 7.5px 0px;
+  padding: 7.5px 5px;
   font-weight: 500;
   position: relative;
   z-index: 1;
+  // background-color: red;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.soft};
+    border-radius: 10px;
+  }
 `;
 
 const Hr = styled.hr`
@@ -112,7 +115,19 @@ const Menu = ({ darkMode, setDarkMode }) => {
           <Logo>
             <Img src={Vtube} alt="logo" />
             <Span>Vtube</Span>
-            <Ctry>PK</Ctry>
+            <Ctry>
+              <p
+                style={{
+                  position: "absolute",
+                  bottom: 4,
+                  fontWeight: "normal",
+                  fontSize: 10,
+                  backgroundColor: red
+                }}
+              >
+                PK
+              </p>
+            </Ctry>
           </Logo>
         </Link>
         <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
@@ -142,12 +157,12 @@ const Menu = ({ darkMode, setDarkMode }) => {
         <Login>
           <span style={{ fontWeight: "bold" }}>Sign in</span> to like videos,
           comment and subscribe.
-          {/* <Link to="signin" style={{ textDecoration: "none" }}> */}
-          <Button>
-            <AccountCircleOutlinedIcon />
-            SIGN IN
-          </Button>
-          {/* </Link> */}
+          <Link to="signin" style={{ textDecoration: "none" }}>
+            <Button>
+              <AccountCircleOutlinedIcon />
+              SIGN IN
+            </Button>
+          </Link>
         </Login>
         <Hr />
         <Title>BEST OF Vtube</Title>

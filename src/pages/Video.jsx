@@ -16,7 +16,7 @@ const Container = styled.div`
 
 const Content = styled.div`
   flex: 4;
-  width: 65%;
+  width: 66%;
 `;
 
 const Wrapper = styled.div`
@@ -33,6 +33,7 @@ const Details = styled.div`
   align-items: flex-end;
   margin-top: 16px;
   gap: 5px;
+  padding: 0px 5px;
 `;
 
 const ChannelImage = styled.img`
@@ -45,6 +46,7 @@ const ChannelImage = styled.img`
 const Title = styled.h3`
   margin-top: 10px;
   font-size: 20px;
+  padding: 0px 5px;
   color: ${({ theme }) => theme.text};
 `;
 
@@ -96,7 +98,7 @@ const Subscribers = styled.h5`
 `;
 
 const Hr = styled.hr`
-  margin: 15px 0px;
+  margin: 15px 5px;
   border: 0.5px solid ${({ theme }) => theme.soft};
 `;
 
