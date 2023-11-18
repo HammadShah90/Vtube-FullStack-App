@@ -1,8 +1,10 @@
 import { styled } from "styled-components";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../assets/Saylani-Welfare.jpg";
 import companyLogo from "../assets/companyLogo.jpg";
 import { Link } from "react-router-dom";
+import { format } from "timeago.js";
+import axios from "axios";
 
 const Container = styled.div`
   width: 335px;
@@ -14,7 +16,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
   display: flex;
   margin-top: 6px;
-  font-size: ${({type}) => (type === "sm" ? "14px" : "16px")}
+  font-size: ${({ type }) => (type === "sm" ? "14px" : "16px")};
 `;
 
 const Image = styled.img`
@@ -48,8 +50,8 @@ const Title = styled.h3`
   color: ${({ theme }) => theme.text};
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 150px;
+  white-space: normal;
+  width: 250px;
 `;
 
 const ChannelName = styled.h4`
@@ -67,19 +69,29 @@ const SeenTime = styled.h5`
   margin-left: 5px;
 `;
 
-const Card = ({ type }) => {
+const Card = ({ type, video }) => {
+  const [channel, setChannel] = useState({});
+
+  useEffect(() => {
+    axios.get(`/api/v1/users/find/${video.userId}`)
+    .then((res) => {
+      setChannel(res.data.data)
+      // console.log(res);
+    })
+    .catch((err) => console.log(err))
+  }, [video.userId]);
   return (
     <Link to="/video/test" style={{ textDecoration: "none" }}>
       <Container type={type}>
-        <Image src={logo} type={type} />
+        <Image src={video.imgUrl} type={type} />
         <Details type={type}>
-          <ChannelImage type={type} src={companyLogo} />
+          <ChannelImage type={type} src={channel.img} />
           <Text type={type}>
-            <Title>Saylani Welfare International Trust</Title>
-            <ChannelName>Saylani Welfare</ChannelName>
+            <Title>{video.title}</Title>
+            <ChannelName>{channel.name}</ChannelName>
             <Wrapper type={type}>
-              <Views>1.2M Views ·</Views>
-              <SeenTime>3 hours ago</SeenTime>
+              <Views>{video.views} Views ·</Views>
+              <SeenTime>{format(video.createdAt)}</SeenTime>
             </Wrapper>
           </Text>
         </Details>

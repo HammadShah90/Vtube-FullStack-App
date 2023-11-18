@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -61,8 +62,8 @@ const Button = styled.button`
 
 const ButtonBox = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  // justify-content: space-between;
+  // align-items: center;
   width: 100%;
   margin-top: 20px;
   gap: 10px;
@@ -81,30 +82,69 @@ const Text = styled.p`
 `;
 
 const SignIn = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [matchPassword, setMatchPassword] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const passwordVisibilityHandler = () => {
+    setShowPassword(!showPassword);
+  }
+
+  const loginHandler = async (e) => {
+    e.preventDefault();
+    if (password === confirmPassword) {
+      try {
+        const res = await axios.post("/api/v1/auth/login", {
+          email,
+          password,
+        });
+        console.log(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      setMatchPassword(false);
+    }
+  };
   return (
     <Container>
       <Wrapper>
-        <Title>Welcome to Vtube</Title>
+        <Title>Welcome Back to Vtube</Title>
         <InputBox>
           <PersonOutlineOutlinedIcon />
-          <Input type="text" placeholder="Username" />
+          <Input
+            type="email"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </InputBox>
         <InputBox>
           <PasswordOutlinedIcon />
-          <Input type="password" placeholder="Password" />
+          <Input
+            type="password"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <VisibilityOutlinedIcon style={{ cursor: "pointer" }} />
         </InputBox>
         <InputBox>
           <PasswordOutlinedIcon />
-          <Input type="password" placeholder="Confirm Password" />
+          <Input
+            type="password"
+            placeholder="Confirm Password"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
           <VisibilityOutlinedIcon style={{ cursor: "pointer" }} />
         </InputBox>
+        {!matchPassword && <p style={{color: "red", fontSize: 12}}>Passwords do not match</p>}
         <Text>Forgot Password?</Text>
         <ButtonBox>
           <Link to="/signup" style={{ textDecoration: "none", width: "100%" }}>
             <Button>Sign Up</Button>
           </Link>
-          <Button>Login</Button>
+          <Button onClick={loginHandler}>Login</Button>
         </ButtonBox>
       </Wrapper>
     </Container>

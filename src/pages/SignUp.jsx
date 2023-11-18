@@ -76,6 +76,12 @@ const ButtonBox = styled.div`
 const More = styled.div``;
 
 const SignUp = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   return (
     <Container>
       <Wrapper>
@@ -83,29 +89,53 @@ const SignUp = () => {
         <Name>
           <InputBox>
             <PersonOutlineOutlinedIcon />
-            <Input type="text" placeholder="First name" />
+            <Input
+              type="text"
+              placeholder="First name"
+              onChange={(e) => setFirstName(e.target.value)}
+            />
           </InputBox>
           <InputBox>
             <PersonOutlineOutlinedIcon />
-            <Input type="text" placeholder="Last name" />
+            <Input
+              type="text"
+              placeholder="Last name"
+              onChange={(e) => setLastName(e.target.value)}
+            />
           </InputBox>
         </Name>
         <InputBox>
           <PersonOutlineOutlinedIcon />
-          <Input type="text" placeholder="Username" />
+          <Input
+            type="text"
+            placeholder="Username"
+            onChange={(e) => setUserName(e.target.value)}
+          />
         </InputBox>
         <InputBox>
           <PersonOutlineOutlinedIcon />
-          <Input type="email" placeholder="Email" />
+          <Input
+            type="email"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </InputBox>
         <InputBox>
           <PasswordOutlinedIcon />
-          <Input type="password" placeholder="Password" />
+          <Input
+            type="password"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <VisibilityOutlinedIcon style={{ cursor: "pointer" }} />
         </InputBox>
         <InputBox>
           <PasswordOutlinedIcon />
-          <Input type="password" placeholder="Confirm Password" />
+          <Input
+            type="password"
+            placeholder="Confirm Password"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
           <VisibilityOutlinedIcon style={{ cursor: "pointer" }} />
         </InputBox>
         <ButtonBox>

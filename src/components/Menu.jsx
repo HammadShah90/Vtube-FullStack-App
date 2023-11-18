@@ -122,7 +122,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
                   bottom: 0,
                   fontWeight: "normal",
                   fontSize: 10,
-                  backgroundColor: red
+                  backgroundColor: red,
                 }}
               >
                 PK
@@ -136,14 +136,18 @@ const Menu = ({ darkMode, setDarkMode }) => {
             <Span>Home</Span>
           </Item>
         </Link>
-        <Item>
-          <ExploreOutlinedIcon />
-          <Span>Explore</Span>
-        </Item>
-        <Item>
-          <SubscriptionsOutlinedIcon />
-          <Span>Subscriptions</Span>
-        </Item>
+        <Link to="trends" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item>
+            <ExploreOutlinedIcon />
+            <Span>Explore</Span>
+          </Item>
+        </Link>
+        <Link to="subscriptions" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item>
+            <SubscriptionsOutlinedIcon />
+            <Span>Subscriptions</Span>
+          </Item>
+        </Link>
         <Hr />
         <Item>
           <VideoLibraryOutlinedIcon />
