@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Menu from "./components/Menu";
 import Navbar from "./components/Navbar";
@@ -8,7 +8,12 @@ import Home from './pages/Home';
 import Video from './pages/Video';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import Forgotpassword from './pages/Forgotpassword';
+
+
 
 
 const Container = styled.div`
@@ -25,23 +30,25 @@ const Wrapper = styled.div`
 `;
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [theme, setTheme] = useState(true);
 
   return (
     <>
-      <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+      <ThemeProvider theme={theme ? lightTheme : darkTheme}>
         <Container>
           <BrowserRouter>
-            <Menu darkMode={darkMode} setDarkMode={setDarkMode} />
+            <Menu theme={theme} setTheme={setTheme} />
             <Main>
               <Navbar />
+              <ToastContainer />
               <Wrapper>
                 <Routes>
                   <Route path="/" element={<Home type="random" />} />
                   <Route path="/trends" element={<Home type="trend" />} />
                   <Route path="/subscriptions" element={<Home type="sub" />} />
-                  <Route path='/signin' element={<SignIn />} />
+                  <Route path='/signin' element={<SignIn theme={theme} setTheme={setTheme}/>} />
                   <Route path='/signup' element={<SignUp />} />
+                  <Route path='/forgotpassword' element={<Forgotpassword />} />
                   <Route path="/video/:id" element={<Video />} />
                 </Routes>
               </Wrapper>

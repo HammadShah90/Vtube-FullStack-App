@@ -107,7 +107,7 @@ const Span = styled.span`
   margin-top: 3px;
 `;
 
-const Menu = ({ darkMode, setDarkMode }) => {
+const Menu = ({ theme, setTheme }) => {
   return (
     <Container>
       <Wrapper>
@@ -207,9 +207,9 @@ const Menu = ({ darkMode, setDarkMode }) => {
           <HelpOutlineOutlinedIcon />
           <Span>Help</Span>
         </Item>
-        <Item onClick={() => setDarkMode(!darkMode)}>
+        <Item onClick={() => setTheme(!theme)}>
           <SettingsBrightnessOutlinedIcon />
-          <Span>{darkMode ? "Light" : "Dark"} Mode</Span>
+          <Span>{theme ? "Dark" : "Light"} Mode</Span>
         </Item>
       </Wrapper>
     </Container>
