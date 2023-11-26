@@ -5,6 +5,7 @@ import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import { Link } from "react-router-dom";
+import { Box, IconButton, Typography, Button, Stack } from "@mui/material";
 
 const Container = styled.div`
   display: flex;
@@ -35,6 +36,7 @@ const InputBox = styled.div`
 
 const Title = styled.h1`
   margin-bottom: 20px;
+  letter-spacing: 5px;
 `;
 const Input = styled.input`
   border: none;
@@ -52,27 +54,46 @@ const Name = styled.div`
   gap: 15px;
 `;
 
-const Button = styled.button`
-  border: none;
-  background-color: #ff000d;
-  padding: 15px 20px;
-  color: white;
-  border-radius: 15px;
+const Text = styled.p`
+  // margin-top: 10px;
+  align-self: flex-end;
+  color: ${({ theme }) => theme.textSoft};
+  font-size: 16px;
   cursor: pointer;
-  width: inherit;
+  text-decoration: none;
 
   &:hover {
-    background-color: #fa464f;
+    color: ${({ theme }) => theme.text};
+    text-decoration: underline;
   }
 `;
 
-const ButtonBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 20px;
-  gap: 10px;
+const Hr = styled.hr`
+  border: 1px solid ${({ theme }) => theme.soft};
+  width: 45%;
 `;
+
+// const Button = styled.button`
+//   border: none;
+//   background-color: #ff000d;
+//   padding: 15px 20px;
+//   color: white;
+//   border-radius: 15px;
+//   cursor: pointer;
+//   width: inherit;
+
+//   &:hover {
+//     background-color: #fa464f;
+//   }
+// `;
+
+// const ButtonBox = styled.div`
+//   display: flex;
+//   justify-content: space-between;
+//   width: 100%;
+//   margin-top: 20px;
+//   gap: 10px;
+// `;
 const More = styled.div``;
 
 const SignUp = () => {
@@ -82,10 +103,20 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const passwordVisibilityHandler = () => {
+    setShowPassword((show) => !show);
+  };
+  const confirmPasswordVisibilityHandler = () => {
+    setShowConfirmPassword((show) => !show);
+  };
+
   return (
     <Container>
       <Wrapper>
-        <Title>Sign up</Title>
+        <Title>Join Now</Title>
         <Name>
           <InputBox>
             <PersonOutlineOutlinedIcon />
@@ -107,14 +138,6 @@ const SignUp = () => {
         <InputBox>
           <PersonOutlineOutlinedIcon />
           <Input
-            type="text"
-            placeholder="Username"
-            onChange={(e) => setUserName(e.target.value)}
-          />
-        </InputBox>
-        <InputBox>
-          <PersonOutlineOutlinedIcon />
-          <Input
             type="email"
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
@@ -123,27 +146,91 @@ const SignUp = () => {
         <InputBox>
           <PasswordOutlinedIcon />
           <Input
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <VisibilityOutlinedIcon style={{ cursor: "pointer" }} />
+          <IconButton
+            sx={{ color: "red" }}
+            aria-label="toggle password visibility"
+            onClick={passwordVisibilityHandler}
+            edge="end"
+          >
+            {showPassword ? (
+              <VisibilityOffOutlinedIcon />
+            ) : (
+              <VisibilityOutlinedIcon />
+            )}
+          </IconButton>
         </InputBox>
         <InputBox>
           <PasswordOutlinedIcon />
           <Input
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
             placeholder="Confirm Password"
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          <VisibilityOutlinedIcon style={{ cursor: "pointer" }} />
+          <IconButton
+            sx={{ color: "red" }}
+            aria-label="toggle password visibility"
+            onClick={confirmPasswordVisibilityHandler}
+            edge="end"
+          >
+            {showConfirmPassword ? (
+              <VisibilityOffOutlinedIcon />
+            ) : (
+              <VisibilityOutlinedIcon />
+            )}
+          </IconButton>
         </InputBox>
-        <ButtonBox>
-          <Button>Sign Up</Button>
-          <Link to="/signin" style={{ textDecoration: "none", width: "100%" }}>
-            <Button>Login</Button>
-          </Link>
-        </ButtonBox>
+        <Stack spacing={2} direction="row" marginTop="25px" width="100%">
+          <Button
+            variant="contained"
+            style={{
+              backgroundColor: "#ff0000",
+              width: "inherit",
+              textAlign: "center",
+              borderRadius: "5px",
+            }}
+          >
+            Signup
+          </Button>
+          {/* <Link to="/signin" style={{ textDecoration: "none", width: "109%" }}>
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: "#ff0000",
+                width: "100%",
+                textAlign: "center",
+                borderRadius: "5px",
+              }}
+            >
+              Login
+            </Button>
+          </Link> */}
+        </Stack>
+        <p
+            style={{
+              textAlign: "start",
+              width: "100%",
+              marginTop: "20px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            Already have an account?
+            <Link
+              to="/signin"
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                marginLeft: 10,
+                fontWeight: "bold",
+              }}
+            >
+              <Text>Login</Text>
+            </Link>
+          </p>
       </Wrapper>
     </Container>
   );

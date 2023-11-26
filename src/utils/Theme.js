@@ -11,5 +11,5 @@ export const lightTheme = {
     bgLighter: "#ffffff",
     text: "#000000",
     textSoft: "#606060",
-    soft: "#f1e5e5"
+    soft: "#c2c2c2"
 }

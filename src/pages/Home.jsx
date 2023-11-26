@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "../components/Card";
 import axios from "axios";
+import VideosAction from "../redux/middleware/videos";
 
 const Container = styled.div`
   display: flex;
@@ -10,16 +11,17 @@ const Container = styled.div`
   padding-top: 10px;
 `;
 
-const Home = ({type}) => {
+const Home = ({ type }) => {
   const [videos, setvideos] = useState([]);
+  // console.log(videos[0].userId);
 
   useEffect(() => {
-    axios.get(`/api/v1/videos/${type}`)
-    .then((res) => {
-      setvideos(res.data.data)
-      // console.log(res);
-    })
-    .catch((err) => console.log(err))
+    const fetchVideos = async () => {
+      const apiResponse = await VideosAction.getAllVideos(type);
+      // console.log(apiResponse.data);
+      setvideos(apiResponse?.data);
+    };
+    fetchVideos();
   }, [type]);
   return (
     <Container>

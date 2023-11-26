@@ -1,4 +1,6 @@
-import React from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import companyLogo from "../assets/companyLogo.jpg";
 import Comments from "../components/Comments";
@@ -7,7 +9,10 @@ import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
-import Card from '../components/Card'
+import Card from "../components/Card";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { videoSuccess } from "../redux/Slices/videoSlice";
 
 const Container = styled.div`
   display: flex;
@@ -102,29 +107,61 @@ const Hr = styled.hr`
   border: 0.5px solid ${({ theme }) => theme.soft};
 `;
 
+const VideoFrame = styled.video`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+`;
+
+const CommentCounts = styled.h3`
+  margin-top: 20px;
+  margin-left: 10px;
+  color: ${({ theme }) => theme.text};
+  font-weight: 500;
+`;
 const Recommendation = styled.div`
   flex: 3;
 `;
 
 const Video = () => {
+  const { currentUser } = useSelector((state) => state.Auth);
+  const { currentVideo } = useSelector((state) => state.Video);
+
+  console.log(currentUser);
+  console.log(currentVideo);
+  const dispatch = useDispatch();
+
+  const path = useLocation().pathname.split("/")[2];
+
+  console.log(path);
+
+  const [channel, setChannel] = useState({});
+
+  useEffect(() => {
+    const fetchChannel = async () => {
+      try {
+        const videoRes = await axios.get(`/v1/videos/find/${path}`);
+        console.log(videoRes);
+        const channelRes = await axios.get(
+          `/v1/users/find/${videoRes?.data?.data?.userId}`
+        );
+        setChannel(channelRes.data);
+        dispatch(videoSuccess(videoRes?.data?.data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchChannel();
+  }, [path, dispatch]);
+
   return (
     <Container>
       <Content>
         <VideoWrapper>
-          <iframe
-            width="100%"
-            height="391"
-            src="https://www.youtube.com/embed/vmnAjHNp1hc"
-            title="Bhulne ki bimari ka wazifa | Hazrat Maulana Bashir Farooq Qadri"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            style={{ borderRadius: "25px" }}
-          ></iframe>
+          <VideoFrame src={currentVideo.videoUrl} controls />
         </VideoWrapper>
-        <Title>
-          Bhulne ki bimari ka wazifa | Hazrat Maulana Bashir Farooq Qadri
-        </Title>
+        <Title>{currentVideo.title}</Title>
         <Details>
           <Wrapper>
             <ChannelImage src={companyLogo} />
@@ -132,7 +169,13 @@ const Video = () => {
               Saylani Welfare International Trust
               <Subscribers>89.6K subscribers</Subscribers>
             </ChannelName>
-            <Box style={{ backgroundColor: "transparent", paddingLeft: 5, paddingBottom: 0 }}>
+            <Box
+              style={{
+                backgroundColor: "transparent",
+                paddingLeft: 5,
+                paddingBottom: 0,
+              }}
+            >
               <Subscription>Subscribe</Subscription>
             </Box>
           </Wrapper>
@@ -156,37 +199,40 @@ const Video = () => {
           </Wrapper>
         </Details>
         <Hr />
+        <CommentCounts>
+          <span>548 Comments</span>
+        </CommentCounts>
         <Comments />
       </Content>
-      <Recommendation>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-        <Card type="sm"/>
-      </Recommendation>
+      {/* <Recommendation>
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+      </Recommendation> */}
     </Container>
   );
 };

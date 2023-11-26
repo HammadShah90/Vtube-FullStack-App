@@ -5,6 +5,7 @@ import companyLogo from "../assets/companyLogo.jpg";
 import { Link } from "react-router-dom";
 import { format } from "timeago.js";
 import axios from "axios";
+import VideosAction from "../redux/middleware/videos";
 
 const Container = styled.div`
   width: 335px;
@@ -71,24 +72,26 @@ const SeenTime = styled.h5`
 
 const Card = ({ type, video }) => {
   const [channel, setChannel] = useState({});
+  // console.log(video);
 
   useEffect(() => {
-    axios.get(`/api/v1/users/find/${video.userId}`)
-    .then((res) => {
-      setChannel(res.data.data)
-      // console.log(res);
-    })
-    .catch((err) => console.log(err))
+    const fetchChannel = async () => {
+      const response = await VideosAction.getVideo(video.userId);
+      // console.log(response);
+      setChannel(response.data);
+    };
+    fetchChannel();
   }, [video.userId]);
+
   return (
-    <Link to="/video/test" style={{ textDecoration: "none" }}>
+    <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
       <Container type={type}>
         <Image src={video.imgUrl} type={type} />
         <Details type={type}>
-          <ChannelImage type={type} src={channel.img} />
+          <ChannelImage type={type} src={companyLogo} />
           <Text type={type}>
             <Title>{video.title}</Title>
-            <ChannelName>{channel.name}</ChannelName>
+            <ChannelName>{channel.firstName}</ChannelName>
             <Wrapper type={type}>
               <Views>{video.views} Views ·</Views>
               <SeenTime>{format(video.createdAt)}</SeenTime>

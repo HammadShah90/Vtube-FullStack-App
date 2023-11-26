@@ -19,6 +19,7 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import { Link } from "react-router-dom";
 import { red } from "@mui/material/colors";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   flex: 0.8;
@@ -87,7 +88,7 @@ const Button = styled.button`
   background-color: transparent;
   border: 1px solid #3ea6ff;
   color: #3ea6ff;
-  border-radius: 15px;
+  border-radius: 5px;
   font-weight: bold;
   margin-top: 10px;
   cursor: pointer;
@@ -108,6 +109,8 @@ const Span = styled.span`
 `;
 
 const Menu = ({ theme, setTheme }) => {
+  const { currentUser } = useSelector((state) => state.Auth);
+
   return (
     <Container>
       <Wrapper>
@@ -142,7 +145,10 @@ const Menu = ({ theme, setTheme }) => {
             <Span>Explore</Span>
           </Item>
         </Link>
-        <Link to="subscriptions" style={{ textDecoration: "none", color: "inherit" }}>
+        <Link
+          to="subscriptions"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
           <Item>
             <SubscriptionsOutlinedIcon />
             <Span>Subscriptions</Span>
@@ -158,17 +164,21 @@ const Menu = ({ theme, setTheme }) => {
           <Span>History</Span>
         </Item>
         <Hr />
-        <Login>
-          <span style={{ fontWeight: "bold" }}>Sign in</span> to like videos,
-          comment and subscribe.
-          <Link to="signin" style={{ textDecoration: "none" }}>
-            <Button>
-              <AccountCircleOutlinedIcon />
-              SIGN IN
-            </Button>
-          </Link>
-        </Login>
-        <Hr />
+        {!currentUser &&
+          <>
+            <Login>
+              <span style={{ fontWeight: "bold" }}>Sign in</span> to like
+              videos, comment and subscribe.
+              <Link to="signin" style={{ textDecoration: "none" }}>
+                <Button>
+                  <AccountCircleOutlinedIcon />
+                  SIGN IN
+                </Button>
+              </Link>
+            </Login>
+            <Hr />
+          </>
+        }
         <Title>BEST OF Vtube</Title>
         <Item>
           <LibraryMusicOutlinedIcon />
@@ -209,7 +219,7 @@ const Menu = ({ theme, setTheme }) => {
         </Item>
         <Item onClick={() => setTheme(!theme)}>
           <SettingsBrightnessOutlinedIcon />
-          <Span>{theme ? "Dark" : "Light"} Mode</Span>
+          <Span>{theme ? "Light" : "Dark"} Mode</Span>
         </Item>
       </Wrapper>
     </Container>

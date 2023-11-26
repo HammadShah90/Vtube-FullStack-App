@@ -1,3 +1,4 @@
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import styled from "styled-components";
@@ -11,6 +12,15 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
+import {
+  loginFailed,
+  loginPending,
+  loginSuccess,
+} from "../redux/Slices/authSlice";
+import AuthActions from "../redux/middleware/auth";
+import { auth, provider } from "../firebase";
+import { signInWithPopup } from "firebase/auth";
+import { Start } from "@mui/icons-material";
 
 const Container = styled.div`
   display: flex;
@@ -41,7 +51,8 @@ const InputBox = styled.div`
 `;
 
 const Title = styled.h1`
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  letter-spacing: 4px;
 `;
 const Input = styled.input`
   border: none;
@@ -71,25 +82,32 @@ const Input = styled.input`
 //   }
 // `;
 
-const ButtonBox = styled.div`
-  display: flex;
-  // justify-content: space-between;
-  // align-items: center;
-  width: 100%;
-  margin-top: 20px;
-  gap: 10px;
-`;
+// const ButtonBox = styled.div`
+//   display: flex;
+//   // justify-content: space-between;
+//   // align-items: center;
+//   width: 100%;
+//   margin-top: 10px;
+//   gap: 5px;
+// `;
+
 const Text = styled.p`
-  margin-top: 10px;
+  // margin-top: 10px;
   align-self: flex-end;
   color: ${({ theme }) => theme.textSoft};
   font-size: 16px;
   cursor: pointer;
-  text-decoration: underline;
+  text-decoration: none;
 
   &:hover {
     color: ${({ theme }) => theme.text};
+    text-decoration: underline;
   }
+`;
+
+const Hr = styled.hr`
+  border: 1px solid ${({ theme }) => theme.soft};
+  width: 45%;
 `;
 
 const SignIn = ({ theme }) => {
@@ -100,6 +118,9 @@ const SignIn = ({ theme }) => {
   const [matchPassword, setMatchPassword] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const passwordVisibilityHandler = () => {
     setShowPassword((show) => !show);
@@ -112,38 +133,96 @@ const SignIn = ({ theme }) => {
   const loginHandler = async (e) => {
     // console.log(e);
     e.preventDefault();
+    // const OTP = Math.floor(Math.random() * 9000 + 1000);
+    // console.log(OTP);
     if (!email || !password || !confirmPassword) {
-      console.log(theme);
-      toast.error("All fields are required", {
-        position: "top-right",
-        theme: theme ? "dark" : "light",
-        autoClose: 2000,
-      });
+      // console.log(theme);
       return;
     } else if (password !== confirmPassword) {
+      toast.error("All fields are required", {
+        position: "top-right",
+        theme: theme ? "light" : "dark",
+        autoClose: 2000,
+      });
       toast.error("Password do not match", {
         position: "top-right",
-        theme: theme ? "dark" : "light",
+        theme: theme ? "light" : "dark",
         autoClose: 2000,
       });
       setMatchPassword(false);
       return;
     }
+    dispatch(loginPending());
     try {
-      const res = await axios.post("/api/v1/auth/login", {
+      const apiResponse = await AuthActions.UserLogin({
         email,
         password,
       });
-      toast.success("Login Successful", {
+      // console.log(apiResponse);
+      if (apiResponse.code === 404) {
+        toast.error(apiResponse.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+      } else if (apiResponse.code === 400) {
+        toast.error(apiResponse.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+      } else {
+        const { data, token } = apiResponse;
+        const payload = {
+          user: data,
+          token,
+        };
+        // console.log(payload);
+        localStorage.setItem("dummyUserToken", token);
+        dispatch(loginSuccess(payload));
+        // localStorage.setItem("loginUserDetails", JSON.stringify(payload))
+        toast.success(apiResponse.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+        navigate("/");
+      }
+    } catch (err) {
+      toast.error(err, {
         position: "top-right",
-        theme: theme ? "dark" : "light",
+        theme: theme ? "light" : "dark",
         autoClose: 2000,
       });
-      console.log(res.data);
-    } catch (err) {
-      toast.error(err);
+      dispatch(loginFailed(err));
     }
   };
+
+  const googleSignInHandler = async () => {
+    dispatch(loginPending());
+    try {
+      const result = await signInWithPopup(auth, provider);
+      console.log(result.user);
+      const { displayName, email, photoURL } = result.user;
+      // console.log(displayName);
+      // console.log(email);
+      // console.log(photoURL);
+      const apiResponse = await axios.post("/v1/auth/googleSignIn", {
+        email,
+        firstName: displayName,
+        img: photoURL,
+      });
+      console.log(apiResponse);
+      toast.success("Login Successful", {
+        position: "top-right",
+        theme: theme ? "light" : "dark",
+        autoClose: 1000,
+      });
+      dispatch(loginSuccess(apiResponse.data));
+      //   navigate("/");
+    } catch (error) {}
+  };
+
   return (
     <Container>
       <Wrapper>
@@ -159,7 +238,7 @@ const SignIn = ({ theme }) => {
         <InputBox>
           <PasswordOutlinedIcon />
           <Input
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -179,7 +258,7 @@ const SignIn = ({ theme }) => {
         <InputBox>
           <PasswordOutlinedIcon />
           <Input
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
             placeholder="Confirm Password"
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
@@ -198,70 +277,99 @@ const SignIn = ({ theme }) => {
         </InputBox>
         <Link
           to="/forgotpassword"
-          style={{ textDecoration: "none", width: "100%", textAlign: "end" }}
+          style={{
+            textDecoration: "none",
+            textAlign: "end",
+            marginTop: 10,
+            alignSelf: "flex-end",
+          }}
         >
           <Text>Forgot Password?</Text>
         </Link>
-        <Stack
-          spacing={2}
-          direction="row"
-          padding="20px"
-          width="100%"
-        >
-          <Link to="/signup" style={{ textDecoration: "none" }}>
+        <Stack spacing={2} direction="row" marginTop="15px" width="100%">
+          {/* <Link to="/signup" style={{ textDecoration: "none", width: "109%" }}>
             <Button
               variant="contained"
-              style={{ backgroundColor: "#ff0000", width: "inherit" }}
+              style={{
+                backgroundColor: "#ff0000",
+                textAlign: "center",
+                borderRadius: "5px",
+                width: "100%",
+              }}
             >
               Signup
             </Button>
-          </Link>
+          </Link> */}
           <Button
             variant="contained"
             onClick={loginHandler}
             style={{
               backgroundColor: "#ff0000",
-              display: "flex",
-              justifyContent: "space-between",
+              textAlign: "center",
+              borderRadius: "5px",
               width: "100%",
             }}
           >
             Login
           </Button>
         </Stack>
-        {/* <Box
+        <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: "15px",
+            marginTop: "6px",
+            width: "100%",
           }}
         >
-          <Box
-            sx={{
-              height: "1px",
-              backgroundColor: `${({ theme }) => theme.bg}`,
-              width: "45%",
-            }}
-          >.</Box>
+          <Hr />
           <Typography
             variant="p"
             sx={{
               fontWeight: 400,
               fontSize: "16px",
               color: `${({ theme }) => theme.text}`,
+              // marginBottom: "2px",
             }}
           >
             or
           </Typography>
-          <Box
-            sx={{
-              height: "1px",
-              backgroundColor: `${({ theme }) => theme.text}`,
-              width: "45%",
+          <Hr />
+        </Box>
+        <Button
+          variant="outlined"
+          style={{
+            color: "",
+            backgroundColor: "transparent",
+            marginTop: "6px",
+            border: "1px solid",
+          }}
+          onClick={googleSignInHandler}
+        >
+          Sign In With Google
+        </Button>
+        <p
+          style={{
+            textAlign: "start",
+            width: "100%",
+            marginTop: "12px",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          Don't have an account?
+          <Link
+            to="/signup"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              marginLeft: 10,
+              fontWeight: "bold",
             }}
-          >.</Box>
-        </Box> */}
+          >
+            <Text>SignUp</Text>
+          </Link>
+        </p>
       </Wrapper>
     </Container>
   );

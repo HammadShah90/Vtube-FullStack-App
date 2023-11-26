@@ -1,12 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+// import { Link } from "react-router-dom";
+// import axios from "axios";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../App.css"
-import { darkTheme, lightTheme } from "../utils/Theme";
+import "../App.css";
+// import { darkTheme, lightTheme } from "../utils/Theme";
+import AuthActions from "../redux/middleware/auth";
 
 const Container = styled.div`
   display: flex;
@@ -52,8 +54,63 @@ const Hr = styled.hr`
   width: 100%;
 `;
 
-const Forgotpassword = () => {
+const Forgotpassword = ({ theme }) => {
+  const [email, setEmail] = useState("");
+  // const [errorMessage, setErrorMessage] = useState("");
+  // const [successMessage, setSuccessMessage] = useState("");
 
+  const navigate = useNavigate();
+
+  const forgorPasswordHandler = async (e) => {
+    e.preventDefault();
+    // console.log(email);
+    try {
+      const apiResponse = await AuthActions.ForgotPassword({
+        email,
+      });
+      // console.log(apiResponse);
+
+      if (apiResponse.status === 400) {
+        // setErrorMessage(apiResponse.message);
+        toast.error(apiResponse.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+      } else if (apiResponse.status === 404) {
+        // setErrorMessage(apiResponse.message);
+        toast.error(apiResponse.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+      } else {
+        // setSuccessMessage(apiResponse.message);
+        toast.success(apiResponse.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+          onClose: () => {
+            setTimeout(() => {
+              navigate(`/sendemail`);
+            }, 3000);
+          },
+        });
+      }
+      // navigate("/resetpassword");
+    } catch (err) {
+      toast.error(err, {
+        position: "top-right",
+        theme: theme ? "light" : "dark",
+        autoClose: 2000,
+      });
+    }
+  };
+
+  const cancelHandler = (e) => {
+    e.preventDefault();
+    navigate("/signin");
+  };
   return (
     <Container>
       <Wrapper>
@@ -82,8 +139,32 @@ const Forgotpassword = () => {
           <Input
             type="email"
             placeholder="Email Address"
+            onChange={(e) => setEmail(e.target.value)}
           />
         </InputBox>
+        {/* {errorMessage ? (
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 400,
+              fontSize: "16px",
+              padding: "20px",
+            }}
+          >
+            {errorMessage}
+          </Typography>
+        ) : (
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 400,
+              fontSize: "16px",
+              padding: "20px",
+            }}
+          >
+            {successMessage}
+          </Typography>
+        )} */}
         <Hr />
         <Stack
           spacing={2}
@@ -98,6 +179,7 @@ const Forgotpassword = () => {
               backgroundColor: "transparent",
               border: "1px solid #ff0000",
             }}
+            onClick={cancelHandler}
           >
             Cancel
           </Button>
@@ -106,7 +188,7 @@ const Forgotpassword = () => {
             style={{ color: "#ffffff", backgroundColor: "#ff0000" }}
             onClick={forgorPasswordHandler}
           >
-            Search
+            Submit
           </Button>
         </Stack>
       </Wrapper>

@@ -1,9 +1,11 @@
-import { SearchOutlined } from "@mui/icons-material";
+import { SearchOutlined, VideoCallOutlined } from "@mui/icons-material";
 import React from "react";
 import styled from "styled-components";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 
 const Container = styled.div`
   position: sticky;
@@ -32,7 +34,7 @@ const Search = styled.div`
   justify-content: space-between;
   padding: 5px 10px;
   border: 1px solid #ccc;
-  border-radius: 50px;
+  border-radius: 25px;
   color: ${({ theme }) => theme.text};
 `;
 
@@ -54,7 +56,7 @@ const Button = styled.button`
   background-color: transparent;
   border: 1px solid #3ea6ff;
   color: #3ea6ff;
-  border-radius: 15px;
+  border-radius: 5px;
   font-weight: bold;
   // margin-top: 10px;
   cursor: pointer;
@@ -63,20 +65,45 @@ const Button = styled.button`
   gap: 5px;
 `;
 
+const User = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text};
+`;
+
+const Avatar = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #999;
+`;
+
 const Navbar = () => {
+  const { currentUser } = useSelector((state) => state.Auth);
+  // console.log(currentUser);
   return (
     <Container>
       <Wrapper>
         <Search>
           <Input placeholder="Search any video..." />
-          <SearchOutlinedIcon style={{cursor: "pointer"}}/>
+          <SearchOutlinedIcon style={{ cursor: "pointer" }} />
         </Search>
-        <Link to="signin" style={{ textDecoration: "none" }}>
-          <Button>
-            <AccountCircleOutlinedIcon />
-            SIGN IN
-          </Button>
-        </Link>
+        {currentUser ? (
+          <User>
+            <VideoCallOutlinedIcon />
+            <Avatar src={currentUser.img} />
+            {currentUser.firstName}
+          </User>
+        ) : (
+          <Link to="signin" style={{ textDecoration: "none" }}>
+            <Button>
+              <AccountCircleOutlinedIcon />
+              SIGN IN
+            </Button>
+          </Link>
+        )}
       </Wrapper>
     </Container>
   );
