@@ -24,7 +24,7 @@ async function CallApi(apiOptions) {
       if (status === 401) {
         // eslint-disable-next-line no-use-before-define
         alert("Session Expired, Please login again. redirecting...");
-        // window.location.href = 'http://localhost:3000/auth/login';
+        // window.location.href = 'http://localhost:5173/signin';
       }
     });
 

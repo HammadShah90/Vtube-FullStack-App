@@ -2,7 +2,18 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
@@ -10,6 +21,7 @@ import { darkTheme, lightTheme } from "../utils/Theme";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import AuthActions from "../redux/middleware/auth";
 import axios from "axios";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Container = styled.div`
   display: flex;
@@ -30,27 +42,22 @@ const Wrapper = styled.div`
 `;
 
 const InputBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  // border-bottom: 1px solid ${({ theme }) => theme.soft};
-
-  width: 100%;
-`;
-
-const Input = styled.input`
-  border: 1px solid ${({ theme }) => theme.text};
-  background-color: transparent;
-  outline: none;
-  color: ${({ theme }) => theme.text};
   background-color: ${({ theme }) => theme.bg};
-  padding: 15px;
-  width: inherit;
-  font-size: 14px;
+  border: 1px solid ${({ theme }) => theme.text};
   border-radius: 5px;
   margin-bottom: 25px;
   margin-right: 20px;
   margin-left: 20px;
+`;
+
+const Input = styled.input`
+  border: none;
+  background-color: transparent;
+  outline: none;
+  color: ${({ theme }) => theme.text};
+  padding: 15px;
+  width: inherit;
+  font-size: 14px;
 `;
 
 const Hr = styled.hr`
@@ -58,33 +65,79 @@ const Hr = styled.hr`
   width: 100%;
 `;
 
+const CustomTextField = styled(TextField)`
+  label {
+    color: ${({ theme }) => theme.textSoft};
+  }
+  & label.Mui-focused {
+    color: ${({ theme }) => theme.text};
+  }
+  & .MuiOutlinedInput-root {
+    &.Mui-focused fieldset {
+      border-color: ${({ theme }) => theme.text};
+    }
+    & fieldset {
+      border-color: ${({ theme }) => theme.textSoft};
+    }
+    & input {
+      color: ${({ theme }) => theme.text};
+    }
+  }
+`;
+const CustomFormControl = styled(FormControl)`
+  label {
+    color: ${({ theme }) => theme.textSoft};
+  }
+  & label.Mui-focused {
+    color: ${({ theme }) => theme.text};
+  }
+  & .MuiOutlinedInput-root {
+    &.Mui-focused fieldset {
+      border-color: ${({ theme }) => theme.text};
+    }
+    & fieldset {
+      border-color: ${({ theme }) => theme.textSoft};
+    }
+    & input {
+      color: ${({ theme }) => theme.text};
+    }
+  }
+`;
+
 const ResetPassword = ({ theme }) => {
   const { userId, token } = useParams();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
+  console.log(userId);
+  console.log(token);
+  // const [password, setPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
+  // const [error, setError] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  // const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+  const passwordVisibilityHandler = () => {
+    setShowPassword((show) => !show);
+  };
+  // const confirmPasswordVisibilityHandler = () => {
+  //   setShowConfirmPassword((show) => !show);
+  // };
   // // const [matchPassword, setMatchPassword] = useState(true);
-  // // const [showPassword, setShowPassword] = useState(false);
-  // // const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  // // const [showPasswordError, setShowPasswordError] = useState(false);
-  // // const [showConfirmPasswordError, setShowConfirmPasswordError] =
-  // //   useState(false);
 
   // const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const verifyToken = async () => {
-  //     try {
-  //       const apiResponse = await axios.get(
-  //         `http://localhost:8000/api/v1/auth/resetpassword/${userId}/${token}`
-  //       );
-  //       console.log(apiResponse);
-  //     } catch (error) {
-  //       setError("Invalid or Expire Token");
-  //     }
-  //   };
-  //   verifyToken();
-  // }, [userId, token]);
+  useEffect(() => {
+    const verifyToken = async () => {
+      try {
+        const apiResponse = await axios.get(
+          `/v1/auth/resetpassword/${userId}/${token}`
+        );
+        console.log(apiResponse);
+      } catch (error) {
+        setError("Invalid or Expire Token");
+      }
+    };
+    verifyToken();
+  }, [userId, token]);
 
   // const changePasswordHandler = async (e) => {
   //   e.preventDefault();
@@ -152,32 +205,71 @@ const ResetPassword = ({ theme }) => {
         >
           Please enter your new password to reset your password
         </Typography>
-        <InputBox>
-          {/* <PersonOutlineOutlinedIcon /> */}
-          <Input
-            type="password"
-            placeholder="New password"
-            onChange={() => {
-              setPassword(e.target.value);
-            }}
-          />
-        </InputBox>
-        <InputBox>
-          {/* <PersonOutlineOutlinedIcon /> */}
-          <Input
-            type="password"
-            placeholder="Confirm password"
-            onChange={() => {
-              setConfirmPassword(e.target.value);
-            }}
-          />
-        </InputBox>
-        <Hr />
-        <Stack
-          direction="row"
-          justifyContent="flex-end"
-          padding="20px"
+        <CustomTextField
+          id="outlined-basic"
+          label="Email"
+          variant="outlined"
+          autoComplete="off"
+          sx={{ m: 1, width: "100%", paddingRight: "17px" }}
+        />
+        <CustomFormControl
+          sx={{ m: 1, width: "100%", paddingRight: "17px" }}
+          variant="outlined"
         >
+          <InputLabel htmlFor="outlined-adornment-password">
+            Password
+          </InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-password"
+            type={showPassword ? "text" : "password"}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={passwordVisibilityHandler}
+                  edge="end"
+                >
+                  {showPassword ? (
+                    <VisibilityOff style={{ color: "red" }} />
+                  ) : (
+                    <Visibility style={{ color: "red" }} />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+          />
+        </CustomFormControl>
+        {/* <CustomFormControl
+          sx={{ m: 1, width: "100%", paddingRight: "17px" }}
+          variant="outlined"
+        >
+          <InputLabel htmlFor="outlined-adornment-password">
+            Confirm Password
+          </InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-password"
+            type={showConfirmPassword ? "text" : "password"}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={confirmPasswordVisibilityHandler}
+                  edge="end"
+                >
+                  {showConfirmPassword ? (
+                    <VisibilityOff style={{ color: "red" }} />
+                  ) : (
+                    <Visibility style={{ color: "red" }} />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+          />
+        </CustomFormControl> */}
+        <Hr />
+        <Stack direction="row" justifyContent="flex-end" padding="20px">
           <Button
             variant="contained"
             style={{ color: "#ffffff", backgroundColor: "#ff0000" }}

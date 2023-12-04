@@ -9,7 +9,7 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
 import {
@@ -17,10 +17,8 @@ import {
   loginPending,
   loginSuccess,
 } from "../redux/Slices/authSlice";
-import AuthActions from "../redux/middleware/auth";
 import { auth, provider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
-import { Start } from "@mui/icons-material";
 
 const Container = styled.div`
   display: flex;
@@ -39,7 +37,6 @@ const Wrapper = styled.div`
   padding: 20px 50px;
   gap: 10px;
   border-radius: 15px;
-  width: 500px;
 `;
 
 const InputBox = styled.div`
@@ -47,7 +44,8 @@ const InputBox = styled.div`
   align-items: center;
   justify-content: center;
   border-bottom: 1px solid ${({ theme }) => theme.soft};
-  width: 100%;/.
+  width: 100%;
+  margin: 0px 40px
 `;
 
 const Title = styled.h1`
@@ -105,6 +103,10 @@ const Text = styled.p`
   }
 `;
 
+const TextBox = styled.div`
+  font-weight: bold;
+`;
+
 const Hr = styled.hr`
   border: 1px solid ${({ theme }) => theme.soft};
   width: 45%;
@@ -137,47 +139,72 @@ const SignIn = ({ theme }) => {
     // console.log(OTP);
     if (!email || !password || !confirmPassword) {
       // console.log(theme);
-      return;
-    } else if (password !== confirmPassword) {
-      toast.error("All fields are required", {
+      return toast.error("All fields are required", {
         position: "top-right",
         theme: theme ? "light" : "dark",
         autoClose: 2000,
       });
-      toast.error("Password do not match", {
+    } else if (password !== confirmPassword) {
+      toast.error("Confirm Password do not match", {
         position: "top-right",
         theme: theme ? "light" : "dark",
         autoClose: 2000,
       });
       setMatchPassword(false);
       return;
-    }
-    dispatch(loginPending());
-    try {
-      const apiResponse = await AuthActions.UserLogin({
-        email,
-        password,
-      });
-      // console.log(apiResponse);
-      if (apiResponse.code === 404) {
-        toast.error(apiResponse.message, {
-          position: "top-right",
-          theme: theme ? "light" : "dark",
-          autoClose: 2000,
+    } else {
+      dispatch(loginPending());
+      try {
+        const apiResponse = await axios.post(`/v1/auth/login`, {
+          email,
+          password,
         });
-      } else if (apiResponse.code === 400) {
-        toast.error(apiResponse.message, {
-          position: "top-right",
-          theme: theme ? "light" : "dark",
-          autoClose: 2000,
-        });
-      } else {
-        const { data, token } = apiResponse;
+        console.log(apiResponse.data);
+        const { data, token } = apiResponse.data;
         const payload = {
           user: data,
           token,
         };
-        // console.log(payload);
+        console.log(payload);
+        localStorage.setItem("dummyUserToken", token);
+        dispatch(loginSuccess(payload));
+        // localStorage.setItem("loginUserDetails", JSON.stringify(payload))
+        toast.success(apiResponse.data.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+        navigate("/");
+      } catch (err) {
+        // console.log(err.response.data.message);
+        toast.error(err.response.data.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+        dispatch(loginFailed(err));
+      }
+    }
+  };
+
+  const googleSignInHandler = async () => {
+    try {
+      dispatch(loginPending());
+      const result = await signInWithPopup(auth, provider);
+      console.log(result);
+      const apiResponse = await axios.post(`/v1/auth/googleSignIn`, {
+        firstName: result.user.displayName,
+        email: result.user.email,
+        img: result.user.photoURL,
+      });
+
+      console.log(apiResponse.data);
+      const { data, token } = apiResponse.data;
+        const payload = {
+          user: data,
+          token,
+        };
+        console.log(payload);
         localStorage.setItem("dummyUserToken", token);
         dispatch(loginSuccess(payload));
         // localStorage.setItem("loginUserDetails", JSON.stringify(payload))
@@ -187,40 +214,10 @@ const SignIn = ({ theme }) => {
           autoClose: 2000,
         });
         navigate("/");
-      }
-    } catch (err) {
-      toast.error(err, {
-        position: "top-right",
-        theme: theme ? "light" : "dark",
-        autoClose: 2000,
-      });
-      dispatch(loginFailed(err));
+    } catch (error) {
+      console.log(error);
+      dispatch(loginFailed(error));
     }
-  };
-
-  const googleSignInHandler = async () => {
-    dispatch(loginPending());
-    try {
-      const result = await signInWithPopup(auth, provider);
-      console.log(result.user);
-      const { displayName, email, photoURL } = result.user;
-      // console.log(displayName);
-      // console.log(email);
-      // console.log(photoURL);
-      const apiResponse = await axios.post("/v1/auth/googleSignIn", {
-        email,
-        firstName: displayName,
-        img: photoURL,
-      });
-      console.log(apiResponse);
-      toast.success("Login Successful", {
-        position: "top-right",
-        theme: theme ? "light" : "dark",
-        autoClose: 1000,
-      });
-      dispatch(loginSuccess(apiResponse.data));
-      //   navigate("/");
-    } catch (error) {}
   };
 
   return (
@@ -348,7 +345,7 @@ const SignIn = ({ theme }) => {
         >
           Sign In With Google
         </Button>
-        <p
+        <TextBox
           style={{
             textAlign: "start",
             width: "100%",
@@ -369,7 +366,7 @@ const SignIn = ({ theme }) => {
           >
             <Text>SignUp</Text>
           </Link>
-        </p>
+        </TextBox>
       </Wrapper>
     </Container>
   );

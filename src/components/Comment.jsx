@@ -1,8 +1,10 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import dummyLogo from "../assets/dummy-logo.png";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
+import { format } from "timeago.js";
 
 const Container = styled.div`
   display: flex;
@@ -47,12 +49,12 @@ const Text = styled.p`
 const Box = styled.div`
   display: flex;
   align-items: center;
-//   background-color: grey;
+  //   background-color: grey;
   margin-top: 10px;
   border-radius: 80px;
   gap: 12px;
   width: 30%;
-  font-size: 13px
+  font-size: 13px;
 `;
 
 const Like = styled.div`
@@ -67,16 +69,29 @@ const DisLike = styled.div`
   align-items: center;
 `;
 
-const Comment = () => {
+const Comment = ({ comment }) => {
+  // console.log(comment);
+  const [channel, setChannel] = useState({});
+
+  useEffect(() => {
+    const fetchComment = async () => {
+      const channelRes = await axios.get(`/v1/users/find/${comment.userId}`);
+      setChannel(channelRes.data?.data);
+      // console.log(channelRes.data);
+    };
+    fetchComment()
+  }, [comment.userId]);
+
+  // console.log(channel);
   return (
     <Container>
       <Avatar src={dummyLogo} />
       <Details>
         <Name>
-          @Hammad Shah <Date>1 day ago</Date>
+          {channel.firstName} {channel.lastName}<Date>{format(comment.createdAt)}</Date>
         </Name>
         <Text>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. A fugit architecto cumque, nulla voluptatum veritatis animi commodi blanditiis nihil excepturi perferendis tempora? Vitae distinctio fugiat modi veniam quidem quia molestias.
+          {comment.desc}
         </Text>
         <Box>
           <Like>
@@ -84,9 +99,9 @@ const Comment = () => {
             37K
           </Like>
           <DisLike>
-            <ThumbDownOffAltIcon style={{fontSize: 20}}/>
+            <ThumbDownOffAltIcon style={{ fontSize: 20 }} />
           </DisLike>
-          <Text style={{marginLeft: 10, fontSize: 13, fontWeight: "bold"}}>
+          <Text style={{ marginLeft: 10, fontSize: 13, fontWeight: "bold" }}>
             Reply
           </Text>
         </Box>

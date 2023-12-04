@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  currentUser: null,
+  currentUser: "",
   isLoading: false,
-  error: false,
+  error: "",
   token: null,
 };
 
@@ -20,7 +20,7 @@ export const userSlice = createSlice({
     },
     loginFailed: (state, { payload }) => {
       state.isLoading = false;
-      state.error = true;
+      state.error = payload.message;
     },
     // signupPending: (state) => {
     //   state.isLoading = true;
@@ -33,9 +33,19 @@ export const userSlice = createSlice({
     //   state.error = true;
     // },
     logout: (state) => {
-      state.currentUser = null;
+      state.currentUser = "";
       state.isLoading = false;
-      state.error = false;
+      state.error = "";
+    },
+    subscription: (state, { payload }) => {
+      if (!state.currentUser.subscribedUsers.includes(payload)) {
+        state.currentUser.subscribedUsers.push(payload);
+      } else {
+        state.currentUser.subscribedUsers.splice(
+          state.currentUser.subscribedUsers.findIndex((sub) => sub === payload),
+          1
+        );
+      }
     },
   },
 });
@@ -50,6 +60,7 @@ export const {
   // signupSuccess,
   // signupFailed,
   logout,
+  subscription,
 } = actions;
 
 export default reducer;

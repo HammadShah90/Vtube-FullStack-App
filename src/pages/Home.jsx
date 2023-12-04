@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "../components/Card";
 import axios from "axios";
-import VideosAction from "../redux/middleware/videos";
+// import { InfinitySpin } from "react-loader-spinner";
+// import Loader from "../components/Loader";
+import { RotatingSquare } from "react-loader-spinner";
 
 const Container = styled.div`
   display: flex;
@@ -12,23 +14,43 @@ const Container = styled.div`
 `;
 
 const Home = ({ type }) => {
+  // console.log(type);
   const [videos, setvideos] = useState([]);
+  const [isloading, setisloading] = useState(true);
   // console.log(videos[0].userId);
 
   useEffect(() => {
+    setTimeout(() => setisloading(false), 3000);
     const fetchVideos = async () => {
-      const apiResponse = await VideosAction.getAllVideos(type);
+      const apiResponse = await axios.get(`/v1/videos/${type}`);
       // console.log(apiResponse.data);
-      setvideos(apiResponse?.data);
+      setvideos(apiResponse?.data?.data);
     };
     fetchVideos();
   }, [type]);
   return (
-    <Container>
-      {videos.map((video) => (
-        <Card key={video._id} video={video} />
-      ))}
-    </Container>
+    <>
+      {isloading ? (
+        <RotatingSquare
+          ariaLabel="rotating-square"
+          visible={true}
+          color="red"
+          strokeWidth="10"
+          wrapperStyle={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "500px",
+          }}
+        />
+      ) : (
+        <Container>
+          {videos.map((video) => (
+            <Card key={video._id} video={video} />
+          ))}
+        </Container>
+      )}
+    </>
   );
 };
 

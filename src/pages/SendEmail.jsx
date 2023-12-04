@@ -20,12 +20,14 @@ const Wrapper = styled.div`
   padding: 40px;
 `;
 
-const Text = styled.h1`
-  margin-bottom: 10px;
-  word-spacing: 3px;
-  letter-spacing: 2px;
-  text-align: center;
-  font-size: 20px;
+const Text = styled.p`
+  // margin-bottom: 10px;
+  // word-spacing: 3px;
+  // letter-spacing: 2px;
+  text-align: justify;
+  font-size: 26px;
+  font-family: 'Hedvig Letters Serif', serif;
+  font-weight: normal;
 `;
 
 export default function SendEmail() {
@@ -33,7 +35,9 @@ export default function SendEmail() {
     <Container>
       <Wrapper>
         <Text>
-          We've sent a link to reset your password to your Email address.
+          We have successfully sent an email to your email address. Please
+          check your inbox and follow the instructions to reset your password.
+          If you have not received the email, please check your spam folder.
         </Text>
       </Wrapper>
     </Container>

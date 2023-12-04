@@ -3,7 +3,6 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 // Reducers
 import AuthReducer from "./Slices/authSlice.js";
 import VideoReducer from "./Slices/videoSlice.js";
-// import videoReducer from "./Slices/videoSlice.js";
 
 import {
   persistStore,
@@ -16,7 +15,6 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { PersistGate } from "redux-persist/integration/react";
 
 const persistConfig = {
   key: "root",
@@ -50,7 +48,6 @@ export const store = configureStore(
         },
       }),
   },
-  +window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
 export const persistor = persistStore(store);

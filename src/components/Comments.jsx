@@ -1,4 +1,6 @@
-import React from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import companyLogo from "../assets/companyLogo.jpg";
 import Comment from "./Comment";
@@ -32,25 +34,38 @@ const Input = styled.input`
   font-size: 14px;
 
   &::placeholder {
-    color: ${({theme}) => theme.textSoft};
+    color: ${({ theme }) => theme.textSoft};
   }
 `;
 
-const Comments = () => {
+const Comments = ({ videoId }) => {
+  // console.log(videoId);
+  const { currentUser } = useSelector((state) => state.Auth);
+
+  const [comments, setComments] = useState([]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const commentsRes = await axios.get(`/v1/comments/${videoId}`);
+        setComments(commentsRes.data?.data);
+        // console.log(commentsRes.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchComments();
+  }, [videoId]);
+
   return (
     <Container>
       <NewComment>
-        <Avatar src={companyLogo} />
+        <Avatar src={currentUser.img} />
         <Input type="text" placeholder="Add a comments here" />
       </NewComment>
-      <Comment />
-      <Comment />
-      <Comment />
-      <Comment />
-      <Comment />
-      <Comment />
-      <Comment />
-      <Comment />
+      {comments.map((comment) => (
+        <Comment key={comment._id} comment={comment} />
+      ))}
     </Container>
   );
 };

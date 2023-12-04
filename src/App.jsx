@@ -13,7 +13,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Forgotpassword from "./pages/Forgotpassword";
 import Resetpassword from "./pages/ResetPassword";
-import { Send } from "@mui/icons-material";
 import SendEmail from "./pages/SendEmail";
 
 const Container = styled.div`

@@ -72,13 +72,13 @@ const SeenTime = styled.h5`
 
 const Card = ({ type, video }) => {
   const [channel, setChannel] = useState({});
-  // console.log(video);
+  // console.log(video._id);
 
   useEffect(() => {
     const fetchChannel = async () => {
-      const response = await VideosAction.getVideo(video.userId);
-      // console.log(response);
-      setChannel(response.data);
+      const response = await axios.get(`/v1/users/find/${video.userId}`);
+      console.log(response);
+      setChannel(response.data.data);
     };
     fetchChannel();
   }, [video.userId]);

@@ -1,17 +1,22 @@
-import { SearchOutlined, VideoCallOutlined } from "@mui/icons-material";
-import React from "react";
+import {
+  SearchOutlined,
+  VideoCallOutlined,
+  AccountCircleOutlined,
+} from "@mui/icons-material";
+import React, { useState } from "react";
 import styled from "styled-components";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
+import { useDispatch, useSelector } from "react-redux";
+import "reactjs-popup/dist/index.css";
+import { logout } from "../redux/Slices/authSlice";
+import Upload from "./Upload";
 
 const Container = styled.div`
   position: sticky;
   top: 0;
   background-color: ${({ theme }) => theme.bgLighter};
   height: 56px;
+  z-index: 10;
 `;
 
 const Wrapper = styled.div`
@@ -25,16 +30,16 @@ const Wrapper = styled.div`
 
 const Search = styled.div`
   width: 45%;
-  position: absolute;
-  left: 0px;
-  right: 0px;
+  // position: absolute;
+  // left: 0px;
+  // right: 0px;
   margin: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 5px 10px;
   border: 1px solid #ccc;
-  border-radius: 25px;
+  border-radius: 10px;
   color: ${({ theme }) => theme.text};
 `;
 
@@ -52,11 +57,11 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  padding: 5px 10px;
+  padding: 6px 14px;
   background-color: transparent;
   border: 1px solid #3ea6ff;
   color: #3ea6ff;
-  border-radius: 5px;
+  border-radius: 10px;
   font-weight: bold;
   // margin-top: 10px;
   cursor: pointer;
@@ -82,30 +87,50 @@ const Avatar = styled.img`
 
 const Navbar = () => {
   const { currentUser } = useSelector((state) => state.Auth);
-  // console.log(currentUser);
+  // const { data } = currentUser;
+  const dispatch = useDispatch();
+  console.log(currentUser);
+  const [open, setOpen] = useState(false);
+
+  const logoutHandler = () => {
+    // console.log("logout working");
+    localStorage.removeItem("dummyUserToken");
+    localStorage.removeItem("persist:root");
+    dispatch(logout());
+    // window.location.reload();
+  };
   return (
-    <Container>
-      <Wrapper>
-        <Search>
-          <Input placeholder="Search any video..." />
-          <SearchOutlinedIcon style={{ cursor: "pointer" }} />
-        </Search>
-        {currentUser ? (
-          <User>
-            <VideoCallOutlinedIcon />
-            <Avatar src={currentUser.img} />
-            {currentUser.firstName}
-          </User>
-        ) : (
-          <Link to="signin" style={{ textDecoration: "none" }}>
-            <Button>
-              <AccountCircleOutlinedIcon />
-              SIGN IN
-            </Button>
-          </Link>
-        )}
-      </Wrapper>
-    </Container>
+    <>
+      <Container>
+        <Wrapper>
+          <Search>
+            <Input placeholder="Search any video..." />
+            <SearchOutlined style={{ cursor: "pointer" }} />
+          </Search>
+          {currentUser ? (
+            <User>
+              <VideoCallOutlined onClick={() => setOpen(true)} style={{cursor: "pointer"}}/>
+              <Avatar src={currentUser.img} />
+              <span style={{ marginRight: 12 }}>
+                {currentUser.firstName}
+              </span>
+              <Button onClick={logoutHandler}>
+                <AccountCircleOutlined />
+                Logout
+              </Button>
+            </User>
+          ) : (
+            <Link to="signin" style={{ textDecoration: "none" }}>
+              <Button>
+                <AccountCircleOutlined />
+                SIGN IN
+              </Button>
+            </Link>
+          )}
+        </Wrapper>
+      </Container>
+      {open && <Upload setOpen={setOpen} />}
+    </>
   );
 };
 
