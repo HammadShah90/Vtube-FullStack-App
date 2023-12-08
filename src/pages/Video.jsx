@@ -19,12 +19,12 @@ import Recommandation from "../components/Recommandation";
 
 const Container = styled.div`
   display: flex;
-  gap: 24px;
+  gap: 18px;
 `;
 
 const Content = styled.div`
   flex: 4;
-  width: 66%;
+  // width: 66%;
 `;
 
 const Wrapper = styled.div`
@@ -96,14 +96,14 @@ const Subscription = styled.div`
   margin-left: 10px;
   width: 120px;
   background-color: ${({ isSubscribed }) =>
-    isSubscribed ? "#8c8c8c" : "#ff0000"};
+    isSubscribed ? "#ff0000" : "#8c8c8c"};
   color: ${({ theme }) => theme.text};
   // Add other styles as needed
 
   &:hover {
     // Define hover styles
     background-color: ${({ theme, isSubscribed }) =>
-      isSubscribed ? "#f72020" : theme.bgLighter};
+      isSubscribed ? theme.bgLighter : "#f72020"};
     color: ${({ theme }) => theme.text};
   }
 `;
@@ -130,9 +130,10 @@ const DisLike = styled.div`
   // }
 `;
 
-const Subscribers = styled.h5`
+const Subscribers = styled.p`
   font-weight: normal;
   margin-top: 4px;
+  font-size: 14px;
 `;
 
 const Hr = styled.hr`
@@ -169,7 +170,7 @@ const Views = styled.h4`
   color: ${({ theme }) => theme.text};
 `;
 
-const SeenTime = styled.h4`
+const SeenTime = styled.p`
   font-weight: 500;
   margin-left: 10px;
   color: ${({ theme }) => theme.text};
@@ -184,7 +185,7 @@ const Description = styled.p`
 const Video = () => {
   const { currentUser } = useSelector((state) => state.Auth);
   const { currentVideo } = useSelector((state) => state.Video);
-  // console.log(currentUser);
+  console.log(currentUser);
   // console.log(currentVideo);
 
   const dispatch = useDispatch();
@@ -198,12 +199,12 @@ const Video = () => {
     const fetchChannel = async () => {
       try {
         const videoRes = await axios.get(`/v1/videos/find/${path}`);
-        console.log(videoRes);
+        // console.log(videoRes);
         const { userId } = videoRes.data.data;
         const channelRes = await axios.get(
           `/v1/users/find/${userId}`
         );
-        console.log(channelRes);
+        // console.log(channelRes);
         setChannel(channelRes.data.data);
         dispatch(videoSuccess(videoRes.data.data));
       } catch (error) {
@@ -213,7 +214,7 @@ const Video = () => {
     fetchChannel();
   }, [path, dispatch]);
 
-  console.log(channel);
+  // console.log(channel);
 
   const isSubscribed = currentUser.subscribedUsers?.includes(channel._id);
 
@@ -229,8 +230,8 @@ const Video = () => {
 
   const subhandler = async () => {
     currentUser.subscribedUsers?.includes(channel._id)
-      ? await axios.put(`/v1/users/sub/${channel._id}`)
-      : await axios.put(`/v1/users/unsub/${channel._id}`);
+      ? await axios.put(`/v1/users/unsub/${channel._id}`)
+      : await axios.put(`/v1/users/sub/${channel._id}`);
     dispatch(subscription(channel._id));
   };
 
@@ -249,9 +250,9 @@ const Video = () => {
               <Subscribers>{channel.subscribers} subscribers</Subscribers>
             </ChannelName>
             <Subscription onClick={subhandler} isSubscribed={isSubscribed}>
-              {currentUser.subscribedUsers?.includes(channel._id)
-                ? "SUBSCRIBE"
-                : "SUBSCRIBED"}
+              {isSubscribed
+                ? "SUBSCRIBED"
+                : "SUBSCRIBE"}
             </Subscription>
           </Wrapper>
           <Wrapper>

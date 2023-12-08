@@ -8,7 +8,7 @@ import axios from "axios";
 import VideosAction from "../redux/middleware/videos";
 
 const Container = styled.div`
-  width: 335px;
+  width: 340px;
   margin-bottom: ${({ type }) => (type === "sm" ? "10px" : "45px")};
   cursor: pointer;
   display: ${({ type }) => type === "sm" && "flex"};
@@ -21,7 +21,7 @@ const Wrapper = styled.div`
 `;
 
 const Image = styled.img`
-  width: 100%;
+  width: ${({ type }) => (type === "sm" ? "170px" : "100%")};
   height: ${({ type }) => (type === "sm" ? "100px" : "201px")};
   border-radius: 15px;
 `;
@@ -30,6 +30,7 @@ const Details = styled.div`
   display: flex;
   margin-top: ${({ type }) => (type === "sm" ? "3px" : "16px")};
   gap: 12px;
+  // width: 300px
 `;
 
 const ChannelImage = styled.img`
@@ -45,6 +46,7 @@ const Text = styled.div`
   align-items: flex-start;
   flex-direction: column;
   margin-left: ${({ type }) => (type === "sm" ? "12px" : "0px")};
+  width: ${({ type }) => (type === "sm" ? "100%" : "inherit")};
 `;
 const Title = styled.h3`
   font-size: 16px;
@@ -52,7 +54,7 @@ const Title = styled.h3`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  width: 250px;
+  width: inherit;
 `;
 
 const ChannelName = styled.h4`
@@ -77,7 +79,7 @@ const Card = ({ type, video }) => {
   useEffect(() => {
     const fetchChannel = async () => {
       const response = await axios.get(`/v1/users/find/${video.userId}`);
-      console.log(response);
+      // console.log(response);
       setChannel(response.data.data);
     };
     fetchChannel();

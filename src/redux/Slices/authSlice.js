@@ -38,13 +38,13 @@ export const userSlice = createSlice({
       state.error = "";
     },
     subscription: (state, { payload }) => {
-      if (!state.currentUser.subscribedUsers.includes(payload)) {
-        state.currentUser.subscribedUsers.push(payload);
-      } else {
+      if (state.currentUser.subscribedUsers.includes(payload)) {
         state.currentUser.subscribedUsers.splice(
           state.currentUser.subscribedUsers.findIndex((sub) => sub === payload),
           1
         );
+      } else {
+        state.currentUser.subscribedUsers.push(payload);
       }
     },
   },

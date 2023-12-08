@@ -39,7 +39,7 @@ const Input = styled.input`
 `;
 
 const Comments = ({ videoId }) => {
-  // console.log(videoId);
+  console.log(videoId);
   const { currentUser } = useSelector((state) => state.Auth);
 
   const [comments, setComments] = useState([]);
@@ -61,7 +61,25 @@ const Comments = ({ videoId }) => {
     <Container>
       <NewComment>
         <Avatar src={currentUser.img} />
-        <Input type="text" placeholder="Add a comments here" />
+        <Input
+          type="text"
+          placeholder="Add a comments here"
+          onKeyDown={(e) => {
+            console.log(e.target.value);
+            if (e.key === "Enter") {
+              axios.post(`/v1/comments`, {
+                desc: e.target.value,
+                videoId
+              });
+            }
+          }}
+          // onChange={(e) => {
+          //   axios.post(`/v1/comments/${videoId}`, {
+          //     Id: currentUser._id,
+          //     desc: e.target.value,
+          //   });
+          // }}
+        />
       </NewComment>
       {comments.map((comment) => (
         <Comment key={comment._id} comment={comment} />

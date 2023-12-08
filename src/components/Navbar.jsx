@@ -5,7 +5,7 @@ import {
 } from "@mui/icons-material";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "reactjs-popup/dist/index.css";
 import { logout } from "../redux/Slices/authSlice";
@@ -89,8 +89,16 @@ const Navbar = () => {
   const { currentUser } = useSelector((state) => state.Auth);
   // const { data } = currentUser;
   const dispatch = useDispatch();
-  console.log(currentUser);
+  const navigate = useNavigate();
+  // console.log(currentUser);
   const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
+  // console.log(q);
+
+  const searchhandler = () => {
+    navigate(`/search?q=${q}`);
+    setQ("");
+  };
 
   const logoutHandler = () => {
     // console.log("logout working");
@@ -104,16 +112,30 @@ const Navbar = () => {
       <Container>
         <Wrapper>
           <Search>
-            <Input placeholder="Search any video..." />
-            <SearchOutlined style={{ cursor: "pointer" }} />
+            <Input
+              placeholder="Search any video..."
+              onChange={(e) => setQ(e.target.value)}
+              value={q}
+              type="text"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  searchhandler();
+                }
+              }}
+            />
+            <SearchOutlined
+              style={{ cursor: "pointer" }}
+              onClick={searchhandler}
+            />
           </Search>
           {currentUser ? (
             <User>
-              <VideoCallOutlined onClick={() => setOpen(true)} style={{cursor: "pointer"}}/>
+              <VideoCallOutlined
+                onClick={() => setOpen(true)}
+                style={{ cursor: "pointer" }}
+              />
               <Avatar src={currentUser.img} />
-              <span style={{ marginRight: 12 }}>
-                {currentUser.firstName}
-              </span>
+              <span style={{ marginRight: 12 }}>{currentUser.firstName}</span>
               <Button onClick={logoutHandler}>
                 <AccountCircleOutlined />
                 Logout

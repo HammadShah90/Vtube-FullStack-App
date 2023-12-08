@@ -14,6 +14,7 @@ import "./App.css";
 import Forgotpassword from "./pages/Forgotpassword";
 import Resetpassword from "./pages/ResetPassword";
 import SendEmail from "./pages/SendEmail";
+import Search from "./pages/Search";
 
 const Container = styled.div`
   display: flex;
@@ -46,6 +47,7 @@ function App() {
                     <Route index element={<Home type="random" />} />
                     <Route path="trends" element={<Home type="trend" />} />
                     <Route path="subscriptions" element={<Home type="sub" />} />
+                    <Route path="search" element={<Search />} />
                     <Route
                       path="signin"
                       element={<SignIn theme={theme} setTheme={setTheme} />}

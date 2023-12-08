@@ -35,7 +35,7 @@ const Name = styled.h4`
   font-weight: 500;
 `;
 
-const Date = styled.h5`
+const Date = styled.p`
   font-size: 12px;
   color: ${({ theme }) => theme.textSoft};
   margin-left: 5px;
