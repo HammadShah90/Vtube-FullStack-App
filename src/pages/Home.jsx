@@ -20,10 +20,10 @@ const Home = ({ type }) => {
   // console.log(videos[0].userId);
 
   useEffect(() => {
-    setTimeout(() => setisloading(false), 4000);
+    setTimeout(() => setisloading(false), 5000);
     const fetchVideos = async () => {
       const apiResponse = await axios.get(`/v1/videos/${type}`);
-      // console.log(apiResponse.data);
+      // console.log(apiResponse);
       setvideos(apiResponse?.data?.data);
     };
     fetchVideos();

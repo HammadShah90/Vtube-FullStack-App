@@ -4,8 +4,12 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import { Link } from "react-router-dom";
+import EmailIcon from '@mui/icons-material/Email';
+import { Link, useNavigate } from "react-router-dom";
 import { Box, IconButton, Typography, Button, Stack } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -73,44 +77,65 @@ const Hr = styled.hr`
   width: 45%;
 `;
 
-// const Button = styled.button`
-//   border: none;
-//   background-color: #ff000d;
-//   padding: 15px 20px;
-//   color: white;
-//   border-radius: 15px;
-//   cursor: pointer;
-//   width: inherit;
-
-//   &:hover {
-//     background-color: #fa464f;
-//   }
-// `;
-
-// const ButtonBox = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-//   width: 100%;
-//   margin-top: 20px;
-//   gap: 10px;
-// `;
 const More = styled.div``;
 
-const SignUp = () => {
+const SignUp = ({ theme }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const passwordVisibilityHandler = () => {
     setShowPassword((show) => !show);
   };
   const confirmPasswordVisibilityHandler = () => {
     setShowConfirmPassword((show) => !show);
+  };
+
+  const signUpHandler = async (e) => {
+    e.preventDefault();
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      return toast.error("All fields are required", {
+        position: "top-right",
+        theme: theme ? "light" : "dark",
+        autoClose: 2000,
+      });
+    } else if (password !== confirmPassword) {
+      return toast.error("Confirm Password do not match", {
+        position: "top-right",
+        theme: theme ? "light" : "dark",
+        autoClose: 2000,
+      });
+    } else {
+      const res = await axios.post("/v1/auth/register", {
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+      if (res) {
+        toast.success("Registration Successful", {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+        setTimeout(() => {
+          navigate("/SignIn");
+        }, 2500)
+      } else {
+        toast.error(res.data.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+      }
+    }
   };
 
   return (
@@ -136,7 +161,7 @@ const SignUp = () => {
           </InputBox>
         </Name>
         <InputBox>
-          <PersonOutlineOutlinedIcon />
+          <EmailIcon />
           <Input
             type="email"
             placeholder="Email"
@@ -186,6 +211,7 @@ const SignUp = () => {
         <Stack spacing={2} direction="row" marginTop="25px" width="100%">
           <Button
             variant="contained"
+            onClick={signUpHandler}
             style={{
               backgroundColor: "#ff0000",
               width: "inherit",
@@ -210,27 +236,27 @@ const SignUp = () => {
           </Link> */}
         </Stack>
         <p
+          style={{
+            textAlign: "start",
+            width: "100%",
+            marginTop: "20px",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          Already have an account?
+          <Link
+            to="/signin"
             style={{
-              textAlign: "start",
-              width: "100%",
-              marginTop: "20px",
-              display: "flex",
-              alignItems: "center",
+              textDecoration: "none",
+              color: "inherit",
+              marginLeft: 10,
+              fontWeight: "bold",
             }}
           >
-            Already have an account?
-            <Link
-              to="/signin"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-                marginLeft: 10,
-                fontWeight: "bold",
-              }}
-            >
-              <Text>Login</Text>
-            </Link>
-          </p>
+            <Text>Login</Text>
+          </Link>
+        </p>
       </Wrapper>
     </Container>
   );

@@ -85,7 +85,7 @@ const Avatar = styled.img`
   background-color: #999;
 `;
 
-const Navbar = () => {
+const Navbar = ({ theme, setTheme }) => {
   const { currentUser } = useSelector((state) => state.Auth);
   // const { data } = currentUser;
   const dispatch = useDispatch();
@@ -151,7 +151,7 @@ const Navbar = () => {
           )}
         </Wrapper>
       </Container>
-      {open && <Upload setOpen={setOpen} />}
+      {open && <Upload setOpen={setOpen} theme={theme} setTheme={setTheme}/>}
     </>
   );
 };

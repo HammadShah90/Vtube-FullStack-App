@@ -74,7 +74,7 @@ const SeenTime = styled.h5`
 
 const Card = ({ type, video }) => {
   const [channel, setChannel] = useState({});
-  // console.log(video._id);
+  // console.log(video.userId);
 
   useEffect(() => {
     const fetchChannel = async () => {

@@ -4,6 +4,8 @@ import styled from "styled-components";
 import axios from "axios";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Button } from "@mui/material";
+import { toast } from "react-toastify";
+import { darkTheme, lightTheme } from "../utils/Theme";
 import {
   getStorage,
   ref,
@@ -57,6 +59,20 @@ const Input = styled.input`
   z-index: 999;
 `;
 
+const StyledFileInput = styled.label`
+  display: inline-block;
+  border: 1px solid ${({ theme }) => theme.soft};
+  color: ${({ theme }) => theme.text};
+  border-radius: 3px;
+  padding: 10px;
+  background-color: transparent;
+  cursor: pointer;
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
+`;
+
 const Desc = styled.textarea`
   border: 1px solid ${({ theme }) => theme.soft};
   border-radius: 3px;
@@ -69,7 +85,7 @@ const Label = styled.label`
   font-size: 14px;
 `;
 
-function Upload({ setOpen }) {
+function Upload({ setOpen, theme, setTheme }) {
   const [img, setImg] = useState(undefined);
   const [video, setVideo] = useState(undefined);
   const [videoPerc, setVideoPerc] = useState(0);
@@ -91,9 +107,13 @@ function Upload({ setOpen }) {
 
   const uploadFile = (file, urlType) => {
     const storage = getStorage(app);
+    // console.log(storage);
     const fileName = new Date().getTime() + file.name;
+    // console.log(fileName);
     const storageRef = ref(storage, fileName);
+    // console.log(storageRef);
     const uploadTask = uploadBytesResumable(storageRef, file);
+    // console.log(uploadTask);
 
     uploadTask.on(
       "state_changed",
@@ -117,6 +137,7 @@ function Upload({ setOpen }) {
       (error) => {},
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log(downloadURL);
           setInputs((prev) => {
             return { ...prev, [urlType]: downloadURL };
           });
@@ -142,6 +163,11 @@ function Upload({ setOpen }) {
       res.status === 200 && navigate(`/video/${res.data.data._id}`);
     } catch (err) {
       console.log(err);
+      toast.error("Please fill all the fields", {
+        position: "top-right",
+        theme: theme ? "light" : "dark",
+        autoClose: 2000,
+      })
     }
   };
 
@@ -152,15 +178,18 @@ function Upload({ setOpen }) {
           <CloseRoundedIcon />
         </Close>
         <Title>Upload a New Video</Title>
-        <Label>Video:</Label>
+        {/* <Label>Video:</Label> */}
         {videoPerc > 0 ? (
           "Uploading " + videoPerc + "%"
         ) : (
-          <Input
-            type="file"
-            accept="video/*"
-            onChange={(e) => setVideo(e.target.files[0])}
-          />
+          <StyledFileInput>
+            Click here to Choose Video
+            <HiddenFileInput
+              type="file"
+              accept="video/*"
+              onChange={(e) => setVideo(e.target.files[0])}
+            />
+          </StyledFileInput>
         )}
         <Input
           type="text"
@@ -174,20 +203,23 @@ function Upload({ setOpen }) {
           rows={8}
           onChange={changeHandler}
         />
-        <Input 
-        type="text" 
-        placeholder="Separate the tags with commas." 
-        onChange={tagsHandler}
+        <Input
+          type="text"
+          placeholder="Separate the tags with commas."
+          onChange={tagsHandler}
         />
-        <Label>Image:</Label>
+        {/* <Label>Image:</Label> */}
         {imgPerc > 0 ? (
           "Uploading " + imgPerc + "%"
         ) : (
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImg(e.target.files[0])}
-          />
+          <StyledFileInput>
+            Click here to Choose Image
+            <HiddenFileInput
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImg(e.target.files[0])}
+            />
+          </StyledFileInput>
         )}
         <Button
           variant="contained"

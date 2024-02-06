@@ -7,6 +7,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import EmailIcon from '@mui/icons-material/Email';
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -61,33 +62,6 @@ const Input = styled.input`
   width: inherit;
   font-size: 14px;
 `;
-// const Button = styled.button`
-//   border: none;
-//   background-color: #ff000d;
-//   padding: 15px 20px;
-//   color: white;
-//   border-radius: 15px;
-//   cursor: pointer;
-//   width: inherit;
-
-//   &:hover {
-//     background-color: #fa464f;
-//   }
-
-//   &.custom-toast {
-//     background-color: ${({ theme }) => theme.bg};
-//     color: ${({ theme }) => theme.text};
-//   }
-// `;
-
-// const ButtonBox = styled.div`
-//   display: flex;
-//   // justify-content: space-between;
-//   // align-items: center;
-//   width: 100%;
-//   margin-top: 10px;
-//   gap: 5px;
-// `;
 
 const Text = styled.p`
   // margin-top: 10px;
@@ -113,7 +87,6 @@ const Hr = styled.hr`
 `;
 
 const SignIn = ({ theme }) => {
-  // console.log(theme);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -130,7 +103,6 @@ const SignIn = ({ theme }) => {
   const confirmPasswordVisibilityHandler = () => {
     setShowConfirmPassword((show) => !show);
   };
-  // let themeColor = theme === false ? lightTheme : darkTheme;
 
   const loginHandler = async (e) => {
     // console.log(e);
@@ -174,7 +146,9 @@ const SignIn = ({ theme }) => {
           theme: theme ? "light" : "dark",
           autoClose: 2000,
         });
-        navigate("/");
+        setTimeout(() => {
+          navigate("/");
+        }, 2500)
       } catch (err) {
         // console.log(err.response.data.message);
         toast.error(err.response.data.message, {
@@ -191,7 +165,7 @@ const SignIn = ({ theme }) => {
     try {
       dispatch(loginPending());
       const result = await signInWithPopup(auth, provider);
-      console.log(result);
+      // console.log(result);
       const apiResponse = await axios.post(`/v1/auth/googleSignIn`, {
         firstName: result.user.displayName,
         email: result.user.email,
@@ -225,7 +199,7 @@ const SignIn = ({ theme }) => {
       <Wrapper>
         <Title>Welcome Back</Title>
         <InputBox>
-          <PersonOutlineOutlinedIcon />
+          <EmailIcon />
           <Input
             type="email"
             placeholder="Email"

@@ -16,6 +16,7 @@ import { dislike, like, videoSuccess } from "../redux/Slices/videoSlice";
 import { format } from "timeago.js";
 import { subscription } from "../redux/Slices/authSlice";
 import Recommandation from "../components/Recommandation";
+import { RotatingSquare } from "react-loader-spinner";
 
 const Container = styled.div`
   display: flex;
@@ -185,7 +186,7 @@ const Description = styled.p`
 const Video = () => {
   const { currentUser } = useSelector((state) => state.Auth);
   const { currentVideo } = useSelector((state) => state.Video);
-  console.log(currentUser);
+  // console.log(currentUser);
   // console.log(currentVideo);
 
   const dispatch = useDispatch();
@@ -194,16 +195,16 @@ const Video = () => {
   // console.log(path);
 
   const [channel, setChannel] = useState({});
+  const [isloading, setisloading] = useState(true);
 
   useEffect(() => {
+    setTimeout(() => setisloading(false), 5000);
     const fetchChannel = async () => {
       try {
         const videoRes = await axios.get(`/v1/videos/find/${path}`);
         // console.log(videoRes);
         const { userId } = videoRes.data.data;
-        const channelRes = await axios.get(
-          `/v1/users/find/${userId}`
-        );
+        const channelRes = await axios.get(`/v1/users/find/${userId}`);
         // console.log(channelRes);
         setChannel(channelRes.data.data);
         dispatch(videoSuccess(videoRes.data.data));
@@ -219,8 +220,13 @@ const Video = () => {
   const isSubscribed = currentUser.subscribedUsers?.includes(channel._id);
 
   const likehandler = async () => {
-    await axios.put(`/v1/users/like/${currentVideo._id}`);
-    dispatch(like(channel._id));
+    try {
+      const response = await axios.put(`/v1/users/like/${currentVideo._id}`);
+      // console.log(response);
+      dispatch(like(channel._id));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const disLikehandler = async () => {
@@ -236,71 +242,86 @@ const Video = () => {
   };
 
   return (
-    <Container>
-      <Content>
-        <VideoWrapper>
-          <VideoFrame src={currentVideo?.videoUrl} controls />
-        </VideoWrapper>
-        <Title>{currentVideo?.title}</Title>
-        <Details>
-          <Wrapper>
-            <ChannelImage src={companyLogo} />
-            <ChannelName>
-              {channel.firstName} {channel.lastName}
-              <Subscribers>{channel.subscribers} subscribers</Subscribers>
-            </ChannelName>
-            <Subscription onClick={subhandler} isSubscribed={isSubscribed}>
-              {isSubscribed
-                ? "SUBSCRIBED"
-                : "SUBSCRIBE"}
-            </Subscription>
-          </Wrapper>
-          <Wrapper>
-            <Box>
-              <Like onClick={likehandler}>
-                {currentVideo?.likes?.includes(channel._id) ? (
-                  <ThumbUpIcon style={{ marginRight: 5, fontSize: 20 }} />
-                ) : (
-                  <ThumbUpOutlinedIcon
-                    style={{ marginRight: 5, fontSize: 20 }}
-                  />
-                )}
-                {currentVideo?.likes?.length}
-              </Like>
-              <DisLike onClick={disLikehandler}>
-                {currentVideo?.disLikes?.includes(channel._id) ? (
-                  <ThumbDownIcon style={{ marginTop: 2, fontSize: 20 }} />
-                ) : (
-                  <ThumbDownOffAltOutlinedIcon
-                    style={{ marginTop: 2, fontSize: 20 }}
-                  />
-                )}
-              </DisLike>
-            </Box>
-            <Box>
-              <ReplyOutlinedIcon style={{ fontSize: 20 }} />
-              Share
-            </Box>
-            <Box style={{ padding: "0px 12px" }}>
-              <MoreHorizOutlinedIcon style={{ fontSize: 20 }} />
-            </Box>
-          </Wrapper>
-        </Details>
-        <ViewsDesc>
-          <Views>
-            {currentVideo?.views} views ·
-            <SeenTime>{format(currentVideo?.createdAt)}</SeenTime>
-          </Views>
-          <Description>{currentVideo?.desc}</Description>
-        </ViewsDesc>
-        <Hr />
-        <CommentCounts>
-          <span>548 Comments</span>
-        </CommentCounts>
-        <Comments videoId={currentVideo?._id} />
-      </Content>
-      <Recommandation tags={currentVideo?.tags} />
-    </Container>
+    <>
+      {isloading ? (
+        <RotatingSquare
+          ariaLabel="rotating-square"
+          visible={true}
+          color="red"
+          strokeWidth="10"
+          wrapperStyle={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "500px",
+          }}
+        />
+      ) : (
+        <Container>
+          <Content>
+            <VideoWrapper>
+              <VideoFrame src={currentVideo?.videoUrl} controls />
+            </VideoWrapper>
+            <Title>{currentVideo?.title}</Title>
+            <Details>
+              <Wrapper>
+                <ChannelImage src={companyLogo} />
+                <ChannelName>
+                  {channel.firstName} {channel.lastName}
+                  <Subscribers>{channel.subscribers} subscribers</Subscribers>
+                </ChannelName>
+                <Subscription onClick={subhandler} isSubscribed={isSubscribed}>
+                  {isSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
+                </Subscription>
+              </Wrapper>
+              <Wrapper>
+                <Box>
+                  <Like onClick={likehandler}>
+                    {currentVideo?.likes?.includes(channel._id) ? (
+                      <ThumbUpIcon style={{ marginRight: 5, fontSize: 20 }} />
+                    ) : (
+                      <ThumbUpOutlinedIcon
+                        style={{ marginRight: 5, fontSize: 20 }}
+                      />
+                    )}
+                    {currentVideo?.likes?.length}
+                  </Like>
+                  <DisLike onClick={disLikehandler}>
+                    {currentVideo?.disLikes?.includes(channel._id) ? (
+                      <ThumbDownIcon style={{ marginTop: 2, fontSize: 20 }} />
+                    ) : (
+                      <ThumbDownOffAltOutlinedIcon
+                        style={{ marginTop: 2, fontSize: 20 }}
+                      />
+                    )}
+                  </DisLike>
+                </Box>
+                <Box>
+                  <ReplyOutlinedIcon style={{ fontSize: 20 }} />
+                  Share
+                </Box>
+                <Box style={{ padding: "0px 12px" }}>
+                  <MoreHorizOutlinedIcon style={{ fontSize: 20 }} />
+                </Box>
+              </Wrapper>
+            </Details>
+            <ViewsDesc>
+              <Views>
+                {currentVideo?.views} views ·
+                <SeenTime>{format(currentVideo?.createdAt)}</SeenTime>
+              </Views>
+              <Description>{currentVideo?.desc}</Description>
+            </ViewsDesc>
+            <Hr />
+            <CommentCounts>
+              <span>548 Comments</span>
+            </CommentCounts>
+            <Comments videoId={currentVideo?._id} />
+          </Content>
+          <Recommandation tags={currentVideo?.tags} />
+        </Container>
+      )}
+    </>
   );
 };
 

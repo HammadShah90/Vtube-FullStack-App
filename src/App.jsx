@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Video from "./pages/Video";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import VerifyOtp from "./pages/VerifyOtp";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
@@ -39,7 +40,7 @@ function App() {
           <BrowserRouter>
             <Menu theme={theme} setTheme={setTheme} />
             <Main>
-              <Navbar />
+              <Navbar theme={theme} setTheme={setTheme}/>
               <ToastContainer />
               <Wrapper>
                 <Routes>
@@ -52,11 +53,17 @@ function App() {
                       path="signin"
                       element={<SignIn theme={theme} setTheme={setTheme} />}
                     />
-                    <Route path="signup" element={<SignUp />} />
+                    <Route path="signup" element={<SignUp theme={theme} setTheme={setTheme} />} />
                     <Route
                       path="forgotpassword"
                       element={
                         <Forgotpassword theme={theme} setTheme={setTheme} />
+                      }
+                    />
+                    <Route
+                      path="verifyOtp"
+                      element={
+                        <VerifyOtp theme={theme} setTheme={setTheme} />
                       }
                     />
                     <Route
