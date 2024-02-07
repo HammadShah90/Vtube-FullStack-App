@@ -4,7 +4,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import EmailIcon from '@mui/icons-material/Email';
+import EmailIcon from "@mui/icons-material/Email";
 import { Link, useNavigate } from "react-router-dom";
 import { Box, IconButton, Typography, Button, Stack } from "@mui/material";
 import { useDispatch } from "react-redux";
@@ -100,24 +100,13 @@ const SignUp = ({ theme }) => {
 
   const signUpHandler = async (e) => {
     e.preventDefault();
-    if (!firstName || !lastName || !email || !password || !confirmPassword) {
-      return toast.error("All fields are required", {
-        position: "top-right",
-        theme: theme ? "light" : "dark",
-        autoClose: 2000,
-      });
-    } else if (password !== confirmPassword) {
-      return toast.error("Confirm Password do not match", {
-        position: "top-right",
-        theme: theme ? "light" : "dark",
-        autoClose: 2000,
-      });
-    } else {
+    try {
       const res = await axios.post("/v1/auth/register", {
         firstName,
         lastName,
         email,
         password,
+        confirmPassword,
       });
       if (res) {
         toast.success("Registration Successful", {
@@ -126,8 +115,8 @@ const SignUp = ({ theme }) => {
           autoClose: 2000,
         });
         setTimeout(() => {
-          navigate("/SignIn");
-        }, 2500)
+          navigate("/signupVerifyOtp");
+        }, 2500);
       } else {
         toast.error(res.data.message, {
           position: "top-right",
@@ -135,7 +124,17 @@ const SignUp = ({ theme }) => {
           autoClose: 2000,
         });
       }
+    } catch (error) {
+      // console.log(error.response.data.message);
+      if (error.response.data.message) {
+        toast.error(error.response.data.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+      }
     }
+    // }
   };
 
   return (

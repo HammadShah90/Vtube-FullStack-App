@@ -8,7 +8,7 @@ import Home from "./pages/Home";
 import Video from "./pages/Video";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import VerifyOtp from "./pages/VerifyOtp";
+import SignupVerifyOtp from "./pages/SignupVerifyOtp";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
@@ -61,9 +61,9 @@ function App() {
                       }
                     />
                     <Route
-                      path="verifyOtp"
+                      path="signupVerifyOtp"
                       element={
-                        <VerifyOtp theme={theme} setTheme={setTheme} />
+                        <SignupVerifyOtp theme={theme} setTheme={setTheme} />
                       }
                     />
                     <Route

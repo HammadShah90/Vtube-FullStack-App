@@ -7,7 +7,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import EmailIcon from '@mui/icons-material/Email';
+import EmailIcon from "@mui/icons-material/Email";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -46,7 +46,7 @@ const InputBox = styled.div`
   justify-content: center;
   border-bottom: 1px solid ${({ theme }) => theme.soft};
   width: 100%;
-  margin: 0px 40px
+  margin: 0px 40px;
 `;
 
 const Title = styled.h1`
@@ -105,59 +105,51 @@ const SignIn = ({ theme }) => {
   };
 
   const loginHandler = async (e) => {
-    // console.log(e);
     e.preventDefault();
-    // const OTP = Math.floor(Math.random() * 9000 + 1000);
-    // console.log(OTP);
-    if (!email || !password || !confirmPassword) {
-      // console.log(theme);
-      return toast.error("All fields are required", {
-        position: "top-right",
-        theme: theme ? "light" : "dark",
-        autoClose: 2000,
-      });
-    } else if (password !== confirmPassword) {
-      toast.error("Confirm Password do not match", {
-        position: "top-right",
-        theme: theme ? "light" : "dark",
-        autoClose: 2000,
-      });
-      setMatchPassword(false);
-      return;
-    } else {
+    try {
       dispatch(loginPending());
-      try {
-        const apiResponse = await axios.post(`/v1/auth/login`, {
-          email,
-          password,
-        });
-        console.log(apiResponse.data);
-        const { data, token } = apiResponse.data;
-        const payload = {
-          user: data,
-          token,
-        };
-        console.log(payload);
-        localStorage.setItem("dummyUserToken", token);
-        dispatch(loginSuccess(payload));
-        // localStorage.setItem("loginUserDetails", JSON.stringify(payload))
-        toast.success(apiResponse.data.message, {
-          position: "top-right",
-          theme: theme ? "light" : "dark",
-          autoClose: 2000,
-        });
-        setTimeout(() => {
-          navigate("/");
-        }, 2500)
-      } catch (err) {
-        // console.log(err.response.data.message);
+      const apiResponse = await axios.post(`/v1/auth/login`, {
+        email,
+        password,
+        confirmPassword,
+      });
+      console.log(apiResponse.data);
+      const { data, token } = apiResponse.data;
+      const payload = {
+        user: data,
+        token,
+      };
+      console.log(payload);
+      localStorage.setItem("dummyUserToken", token);
+      dispatch(loginSuccess(payload));
+      // localStorage.setItem("loginUserDetails", JSON.stringify(payload))
+      toast.success(apiResponse.data.message, {
+        position: "top-right",
+        theme: theme ? "light" : "dark",
+        autoClose: 2000,
+      });
+      setTimeout(() => {
+        navigate("/");
+      }, 2500);
+    } catch (err) {
+      console.log(err.response.data.message);
+      if (err.response.data.message === "Check your email and verify your OTP first") {
         toast.error(err.response.data.message, {
           position: "top-right",
           theme: theme ? "light" : "dark",
           autoClose: 2000,
         });
-        dispatch(loginFailed(err));
+        setTimeout(() => {
+          navigate("/signupVerifyOtp");
+        }, 2500);
+      } else {
+        toast.error(err.response.data.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
       }
+      dispatch(loginFailed(err));
     }
   };
 
@@ -174,20 +166,20 @@ const SignIn = ({ theme }) => {
 
       console.log(apiResponse.data);
       const { data, token } = apiResponse.data;
-        const payload = {
-          user: data,
-          token,
-        };
-        console.log(payload);
-        localStorage.setItem("dummyUserToken", token);
-        dispatch(loginSuccess(payload));
-        // localStorage.setItem("loginUserDetails", JSON.stringify(payload))
-        toast.success(apiResponse.message, {
-          position: "top-right",
-          theme: theme ? "light" : "dark",
-          autoClose: 2000,
-        });
-        navigate("/");
+      const payload = {
+        user: data,
+        token,
+      };
+      console.log(payload);
+      localStorage.setItem("dummyUserToken", token);
+      dispatch(loginSuccess(payload));
+      // localStorage.setItem("loginUserDetails", JSON.stringify(payload))
+      toast.success(apiResponse.message, {
+        position: "top-right",
+        theme: theme ? "light" : "dark",
+        autoClose: 2000,
+      });
+      navigate("/");
     } catch (error) {
       console.log(error);
       dispatch(loginFailed(error));
@@ -258,19 +250,6 @@ const SignIn = ({ theme }) => {
           <Text>Forgot Password?</Text>
         </Link>
         <Stack spacing={2} direction="row" marginTop="15px" width="100%">
-          {/* <Link to="/signup" style={{ textDecoration: "none", width: "109%" }}>
-            <Button
-              variant="contained"
-              style={{
-                backgroundColor: "#ff0000",
-                textAlign: "center",
-                borderRadius: "5px",
-                width: "100%",
-              }}
-            >
-              Signup
-            </Button>
-          </Link> */}
           <Button
             variant="contained"
             onClick={loginHandler}
