@@ -101,7 +101,7 @@ const SignUp = ({ theme }) => {
   const signUpHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/v1/auth/register", {
+      const res = await axios.post("/api/v1/auth/register", {
         firstName,
         lastName,
         email,

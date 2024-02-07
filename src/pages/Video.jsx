@@ -201,10 +201,10 @@ const Video = () => {
     setTimeout(() => setisloading(false), 5000);
     const fetchChannel = async () => {
       try {
-        const videoRes = await axios.get(`/v1/videos/find/${path}`);
+        const videoRes = await axios.get(`/api/v1/videos/find/${path}`);
         // console.log(videoRes);
         const { userId } = videoRes.data.data;
-        const channelRes = await axios.get(`/v1/users/find/${userId}`);
+        const channelRes = await axios.get(`/api/v1/users/find/${userId}`);
         // console.log(channelRes);
         setChannel(channelRes.data.data);
         dispatch(videoSuccess(videoRes.data.data));

@@ -22,7 +22,7 @@ const Home = ({ type }) => {
   useEffect(() => {
     setTimeout(() => setisloading(false), 5000);
     const fetchVideos = async () => {
-      const apiResponse = await axios.get(`/v1/videos/${type}`);
+      const apiResponse = await axios.get(`/api/v1/videos/${type}`);
       // console.log(apiResponse);
       setvideos(apiResponse?.data?.data);
     };

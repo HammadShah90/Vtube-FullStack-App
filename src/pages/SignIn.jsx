@@ -108,7 +108,7 @@ const SignIn = ({ theme }) => {
     e.preventDefault();
     try {
       dispatch(loginPending());
-      const apiResponse = await axios.post(`/v1/auth/login`, {
+      const apiResponse = await axios.post(`/api/v1/auth/login`, {
         email,
         password,
         confirmPassword,

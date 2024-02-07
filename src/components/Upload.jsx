@@ -157,7 +157,7 @@ function Upload({ setOpen, theme, setTheme }) {
   const uploadHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/v1/videos", { ...inputs, tags });
+      const res = await axios.post("/api/v1/videos", { ...inputs, tags });
       console.log(res);
       setOpen(false);
       res.status === 200 && navigate(`/video/${res.data.data._id}`);

@@ -115,7 +115,7 @@ const SignupVerifyOtp = ({ theme }) => {
   const signupVerifyHandler = async (e) => {
     e.preventDefault();
     try {
-      const apiResponse = await axios.post("/v1/auth/verifyEmailOtp", {
+      const apiResponse = await axios.post("/api/v1/auth/verifyEmailOtp", {
         email,
         Otp: otp,
       })

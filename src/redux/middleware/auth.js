@@ -115,7 +115,7 @@ const ForgotPassword = (payload) => {
     try {
       const { email } = payload;
       const apiOptions = {
-        endpoint: `/v1/auth/forgotpassword`,
+        endpoint: `/api/v1/auth/forgotpassword`,
         headers: {
           "Content-Type": "application/json",
         },

@@ -20,7 +20,7 @@ const Search = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await axios.get(`/v1/videos/search${query}`);
+        const response = await axios.get(`/api/v1/videos/search${query}`);
         console.log(response);
         setVideos(response.data.data);
       } catch (error) {

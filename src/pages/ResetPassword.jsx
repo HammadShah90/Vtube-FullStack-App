@@ -129,7 +129,7 @@ const ResetPassword = ({ theme }) => {
     const verifyToken = async () => {
       try {
         const apiResponse = await axios.get(
-          `/v1/auth/resetpassword/${userId}/${token}`
+          `/api/v1/auth/resetpassword/${userId}/${token}`
         );
         console.log(apiResponse);
       } catch (error) {

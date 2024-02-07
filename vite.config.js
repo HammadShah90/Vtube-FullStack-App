@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/v1": {
-        target: "http://localhost:3000/api",
+      "/api": {
+        target: "https://vtube-v1.cyclic.app",
         changeOrigin: true,
       },
     },
