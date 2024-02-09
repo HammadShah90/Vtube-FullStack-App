@@ -1,5 +1,4 @@
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
 
 async function CallApi(apiOptions) {
   let apiResponse = {};
@@ -24,7 +23,7 @@ async function CallApi(apiOptions) {
       if (status === 401) {
         // eslint-disable-next-line no-use-before-define
         alert("Session Expired, Please login again. redirecting...");
-        // window.location.href = 'http://localhost:5173/signin';
+        window.location.href = 'http://localhost:5173/signin';
       }
     });
 

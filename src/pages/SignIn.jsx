@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Box, IconButton, Typography, Button, Stack } from "@mui/material";
+import AuthActions from "../redux/middleware/auth";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -108,7 +109,7 @@ const SignIn = ({ theme }) => {
     e.preventDefault();
     try {
       dispatch(loginPending());
-      const apiResponse = await axios.post(`/api/v1/auth/login`, {
+      const apiResponse = await AuthActions.UserLogin({
         email,
         password,
         confirmPassword,

@@ -1,11 +1,12 @@
+import { baseURL } from "../../config/constant";
 import Utils from "../utils";
 
 const UserLogin = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { email, password } = payload;
+      const { email, password, confirmPassword } = payload;
       const apiOptions = {
-        endpoint: `/v1/auth/login`,
+        endpoint: `${baseURL}/v1/auth/login`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -13,6 +14,7 @@ const UserLogin = (payload) => {
         data: {
           email,
           password,
+          confirmPassword,
         },
       };
       const apiResponse = await Utils.CallApi(apiOptions);
@@ -30,9 +32,9 @@ const UserLogin = (payload) => {
 const UserSignup = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { firstName, lastName, email, password, cPassword } = payload;
+      const { firstName, lastName, email, password, confirmPassword } = payload;
       const apiOptions = {
-        endpoint: `/v1/auth/register`,
+        endpoint: `${baseURL}/v1/auth/register`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -42,7 +44,7 @@ const UserSignup = (payload) => {
           lastName,
           email,
           password,
-          cPassword,
+          confirmPassword,
         },
       };
       const apiResponse = await Utils.CallApi(apiOptions);
@@ -63,7 +65,7 @@ const UserWithGoogle = (payload) => {
     try {
       const { email, firstName, img } = payload;
       const apiOptions = {
-        endpoint: `/v1/auth/google`,
+        endpoint: `${baseURL}/v1/auth/googleSignIn`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -115,7 +117,7 @@ const ForgotPassword = (payload) => {
     try {
       const { email } = payload;
       const apiOptions = {
-        endpoint: `/api/v1/auth/forgotpassword`,
+        endpoint: `${baseURL}/v1/auth/forgotpassword`,
         headers: {
           "Content-Type": "application/json",
         },
