@@ -10,6 +10,7 @@ import { Box, IconButton, Typography, Button, Stack } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import axios from "axios";
+import AuthActions from "../redux/middleware/auth";
 
 const Container = styled.div`
   display: flex;
@@ -101,14 +102,22 @@ const SignUp = ({ theme }) => {
   const signUpHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/v1/auth/register", {
+      const apiResponse = await AuthActions.UserSignup({
         firstName,
         lastName,
         email,
         password,
         confirmPassword,
       });
-      if (res) {
+      console.log(apiResponse);
+
+      if (!apiResponse.status) {
+        return toast.error(apiResponse.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+      } else {
         toast.success("Registration Successful", {
           position: "top-right",
           theme: theme ? "light" : "dark",
@@ -117,17 +126,11 @@ const SignUp = ({ theme }) => {
         setTimeout(() => {
           navigate("/signupVerifyOtp");
         }, 2500);
-      } else {
-        toast.error(res.data.message, {
-          position: "top-right",
-          theme: theme ? "light" : "dark",
-          autoClose: 2000,
-        });
       }
     } catch (error) {
       // console.log(error.response.data.message);
-      if (error.response.data.message) {
-        toast.error(error.response.data.message, {
+      if (error.response.message) {
+        toast.error(error.response.message, {
           position: "top-right",
           theme: theme ? "light" : "dark",
           autoClose: 2000,

@@ -115,12 +115,18 @@ const SignupVerifyOtp = ({ theme }) => {
   const signupVerifyHandler = async (e) => {
     e.preventDefault();
     try {
-      const apiResponse = await axios.post("/api/v1/auth/verifyEmailOtp", {
+      const apiResponse = await AuthActions.SignupVerifyOtp({
         email,
-        Otp: otp,
+        otp,
       })
       console.log(apiResponse);
-      if (apiResponse) {
+      if (!apiResponse.status) {
+        toast.error(apiResponse.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        })
+      } else {
         toast.success("Email verified successfully", {
           position: "top-right",
           theme: theme ? "light" : "dark",
@@ -131,14 +137,14 @@ const SignupVerifyOtp = ({ theme }) => {
         }, 2500);
       }
     } catch (error) {
-      console.log(error.response.data.message);
-      if (error.response.data.message === "") {
-        toast.error(error.response.data.message, {
-          position: "top-right",
-          theme: theme ? "light" : "dark",
-          autoClose: 2000,
-        });
-      }
+      console.log(error);
+      // if (error.response.message === "") {
+      //   toast.error(error.response.message, {
+      //     position: "top-right",
+      //     theme: theme ? "light" : "dark",
+      //     autoClose: 2000,
+      //   });
+      // }
     }
   }
 

@@ -14,6 +14,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
+import { baseURL } from "../config/constant";
 import {
   loginFailed,
   loginPending,
@@ -114,27 +115,50 @@ const SignIn = ({ theme }) => {
         password,
         confirmPassword,
       });
-      console.log(apiResponse.data);
-      const { data, token } = apiResponse.data;
-      const payload = {
-        user: data,
-        token,
-      };
-      console.log(payload);
-      localStorage.setItem("dummyUserToken", token);
-      dispatch(loginSuccess(payload));
-      // localStorage.setItem("loginUserDetails", JSON.stringify(payload))
-      toast.success(apiResponse.data.message, {
-        position: "top-right",
-        theme: theme ? "light" : "dark",
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        navigate("/");
-      }, 2500);
+      console.log(apiResponse);
+
+      if (!apiResponse.status) {
+        if (apiResponse.message === "Check your email and verify your OTP first") {
+          toast.error(apiResponse.message, {
+            position: "top-right",
+            theme: theme ? "light" : "dark",
+            autoClose: 2000,
+          });
+          setTimeout(() => {
+            navigate("/signupVerifyOtp");
+          }, 2500);
+        } else {
+          toast.error(apiResponse.message, {
+            position: "top-right",
+            theme: theme ? "light" : "dark",
+            autoClose: 2000,
+          });
+        }
+        return dispatch(loginFailed(apiResponse));
+      } else {
+        toast.success(apiResponse.message, {
+          position: "top-right",
+          theme: theme ? "light" : "dark",
+          autoClose: 2000,
+        });
+        const { data, token } = apiResponse;
+        const payload = {
+          user: data,
+          token,
+        };
+        console.log(payload);
+        localStorage.setItem("dummyUserToken", token);
+        dispatch(loginSuccess(payload));
+        // localStorage.setItem("loginUserDetails", JSON.stringify(payload))
+        setTimeout(() => {
+          navigate("/");
+        }, 2500);
+      }
     } catch (err) {
-      console.log(err.response.data.message);
-      if (err.response.data.message === "Check your email and verify your OTP first") {
+      console.log(err.response.message);
+      if (
+        err.response.message === "Check your email and verify your OTP first"
+      ) {
         toast.error(err.response.data.message, {
           position: "top-right",
           theme: theme ? "light" : "dark",
@@ -159,7 +183,7 @@ const SignIn = ({ theme }) => {
       dispatch(loginPending());
       const result = await signInWithPopup(auth, provider);
       // console.log(result);
-      const apiResponse = await axios.post(`/v1/auth/googleSignIn`, {
+      const apiResponse = await axios.post(`${baseURL}/v1/auth/googleSignIn`, {
         firstName: result.user.displayName,
         email: result.user.email,
         img: result.user.photoURL,

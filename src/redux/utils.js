@@ -3,30 +3,29 @@ import axios from "axios";
 async function CallApi(apiOptions) {
   let apiResponse = {};
 
-  const config = {
-    method: apiOptions.method,
-    url: apiOptions.endpoint,
-    headers: apiOptions.headers,
-    data: apiOptions?.data,
-  };
+  try {
+    const config = {
+      method: apiOptions.method,
+      url: apiOptions.endpoint,
+      headers: apiOptions.headers,
+      data: apiOptions?.data,
+    };
+    console.log(config);
 
-  await axios(config)
-    .then((result) => {
-      // console.log(result);
-      apiResponse = result;
-    })
-    .catch((error) => {
-      apiResponse = error;
+    const result = await axios(config);
+    console.log(result);
+    apiResponse = result;
+  } catch (error) {
+    console.log(error);
+    const { status } = error.response;
 
-      const { status } = error.response;
-
-      if (status === 401) {
-        // eslint-disable-next-line no-use-before-define
-        alert("Session Expired, Please login again. redirecting...");
-        window.location.href = 'http://localhost:5173/signin';
-      }
-    });
-
+    if (status === 401) {
+      alert("Session Expired, Please login again. redirecting...");
+      // window.location.href = 'http://localhost:5173/signin';
+    }
+    apiResponse = error;
+  }
+  // console.log(apiResponse);
   return apiResponse;
 }
 
