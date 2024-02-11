@@ -103,7 +103,7 @@ const CustomFormControl = styled(FormControl)`
   }
 `;
 
-const SignupVerifyOtp = ({ theme }) => {
+const VerifyOtp = ({ theme }) => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -112,22 +112,22 @@ const SignupVerifyOtp = ({ theme }) => {
     setShowPassword((show) => !show);
   };
 
-  const signupVerifyHandler = async (e) => {
+  const verifyOtpHandler = async (e) => {
     e.preventDefault();
     try {
-      const apiResponse = await AuthActions.SignupVerifyOtp({
+      const apiResponse = await AuthActions.VerifyOtp({
         email,
         otp,
-      })
+      });
       console.log(apiResponse);
       if (!apiResponse.status) {
         toast.error(apiResponse.message, {
           position: "top-right",
           theme: theme ? "light" : "dark",
           autoClose: 2000,
-        })
+        });
       } else {
-        toast.success("Email verified successfully", {
+        toast.success(apiResponse.message, {
           position: "top-right",
           theme: theme ? "light" : "dark",
           autoClose: 2000,
@@ -138,15 +138,13 @@ const SignupVerifyOtp = ({ theme }) => {
       }
     } catch (error) {
       console.log(error);
-      // if (error.response.message === "") {
-      //   toast.error(error.response.message, {
-      //     position: "top-right",
-      //     theme: theme ? "light" : "dark",
-      //     autoClose: 2000,
-      //   });
-      // }
+      toast.error(error.response.message, {
+        position: "top-right",
+        theme: theme ? "light" : "dark",
+        autoClose: 2000,
+      });
     }
-  }
+  };
 
   return (
     <Container>
@@ -160,7 +158,7 @@ const SignupVerifyOtp = ({ theme }) => {
             fontSize: "27px",
           }}
         >
-          Signup Email Verification
+          Email Verification
         </Typography>
         <Hr />
         <Typography
@@ -218,7 +216,7 @@ const SignupVerifyOtp = ({ theme }) => {
           <Button
             variant="contained"
             style={{ color: "#ffffff", backgroundColor: "#ff0000" }}
-            onClick={signupVerifyHandler}
+            onClick={verifyOtpHandler}
           >
             Verify Email
           </Button>
@@ -228,4 +226,4 @@ const SignupVerifyOtp = ({ theme }) => {
   );
 };
 
-export default SignupVerifyOtp;
+export default VerifyOtp;

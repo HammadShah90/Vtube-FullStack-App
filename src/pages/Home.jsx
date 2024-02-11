@@ -5,6 +5,7 @@ import axios from "axios";
 // import { InfinitySpin } from "react-loader-spinner";
 // import Loader from "../components/Loader";
 import { RotatingSquare } from "react-loader-spinner";
+import VideosAction from "../redux/middleware/videos";
 
 const Container = styled.div`
   display: flex;
@@ -22,9 +23,9 @@ const Home = ({ type }) => {
   useEffect(() => {
     setTimeout(() => setisloading(false), 5000);
     const fetchVideos = async () => {
-      const apiResponse = await axios.get(`/api/v1/videos/${type}`);
-      // console.log(apiResponse);
-      setvideos(apiResponse?.data?.data);
+      const apiResponse = await VideosAction.getAllVideos(type)
+      console.log(apiResponse);
+      setvideos(apiResponse.data);
     };
     fetchVideos();
   }, [type]);

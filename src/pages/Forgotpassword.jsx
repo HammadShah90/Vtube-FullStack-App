@@ -70,34 +70,23 @@ const Forgotpassword = ({ theme }) => {
       });
       // console.log(apiResponse);
 
-      if (apiResponse.status === 400) {
-        // setErrorMessage(apiResponse.message);
-        toast.error(apiResponse.message, {
-          position: "top-right",
-          theme: theme ? "light" : "dark",
-          autoClose: 2000,
-        });
-      } else if (apiResponse.status === 404) {
-        // setErrorMessage(apiResponse.message);
-        toast.error(apiResponse.message, {
+      if (!apiResponse.status) {
+        return toast.error(apiResponse.message, {
           position: "top-right",
           theme: theme ? "light" : "dark",
           autoClose: 2000,
         });
       } else {
-        // setSuccessMessage(apiResponse.message);
         toast.success(apiResponse.message, {
           position: "top-right",
           theme: theme ? "light" : "dark",
           autoClose: 2000,
-          onClose: () => {
-            setTimeout(() => {
-              navigate(`/sendemail`);
-            }, 3000);
-          },
         });
+        setTimeout(() => {
+          navigate("/verifyOtp");
+        }, 2500);
       }
-      // navigate("/resetpassword");
+
     } catch (err) {
       toast.error(err, {
         position: "top-right",

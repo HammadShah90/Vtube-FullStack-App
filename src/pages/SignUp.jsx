@@ -118,13 +118,13 @@ const SignUp = ({ theme }) => {
           autoClose: 2000,
         });
       } else {
-        toast.success("Registration Successful", {
+        toast.success(apiResponse.message, {
           position: "top-right",
           theme: theme ? "light" : "dark",
           autoClose: 2000,
         });
         setTimeout(() => {
-          navigate("/signupVerifyOtp");
+          navigate("/verifyOtp");
         }, 2500);
       }
     } catch (error) {

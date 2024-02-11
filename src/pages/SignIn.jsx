@@ -125,7 +125,7 @@ const SignIn = ({ theme }) => {
             autoClose: 2000,
           });
           setTimeout(() => {
-            navigate("/signupVerifyOtp");
+            navigate("/verifyOtp");
           }, 2500);
         } else {
           toast.error(apiResponse.message, {

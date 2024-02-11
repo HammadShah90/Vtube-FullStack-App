@@ -8,13 +8,12 @@ import Home from "./pages/Home";
 import Video from "./pages/Video";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import SignupVerifyOtp from "./pages/SignupVerifyOtp";
+import VerifyOtp from "./pages/VerifyOtp";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Forgotpassword from "./pages/Forgotpassword";
 import Resetpassword from "./pages/ResetPassword";
-import SendEmail from "./pages/SendEmail";
 import Search from "./pages/Search";
 
 const Container = styled.div`
@@ -61,14 +60,10 @@ function App() {
                       }
                     />
                     <Route
-                      path="signupVerifyOtp"
+                      path="verifyOtp"
                       element={
-                        <SignupVerifyOtp theme={theme} setTheme={setTheme} />
+                        <VerifyOtp theme={theme} setTheme={setTheme} />
                       }
-                    />
-                    <Route
-                      path="sendemail"
-                      element={<SendEmail theme={theme} setTheme={setTheme} />}
                     />
                     <Route
                       path="resetpassword/:id/:token"

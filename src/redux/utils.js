@@ -21,7 +21,7 @@ async function CallApi(apiOptions) {
 
     if (status === 401) {
       alert("Session Expired, Please login again. redirecting...");
-      // window.location.href = 'http://localhost:5173/signin';
+      window.location.href = 'http://localhost:5173/signin';
     }
     apiResponse = error;
   }

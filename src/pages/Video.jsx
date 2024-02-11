@@ -17,6 +17,7 @@ import { format } from "timeago.js";
 import { subscription } from "../redux/Slices/authSlice";
 import Recommandation from "../components/Recommandation";
 import { RotatingSquare } from "react-loader-spinner";
+import VideosAction from "../redux/middleware/videos";
 
 const Container = styled.div`
   display: flex;
@@ -201,10 +202,10 @@ const Video = () => {
     setTimeout(() => setisloading(false), 5000);
     const fetchChannel = async () => {
       try {
-        const videoRes = await axios.get(`/api/v1/videos/find/${path}`);
+        const videoRes = await VideosAction.getVideo(path);
         // console.log(videoRes);
         const { userId } = videoRes.data.data;
-        const channelRes = await axios.get(`/api/v1/users/find/${userId}`);
+        const channelRes = await VideosAction.getChannel(userId);
         // console.log(channelRes);
         setChannel(channelRes.data.data);
         dispatch(videoSuccess(videoRes.data.data));

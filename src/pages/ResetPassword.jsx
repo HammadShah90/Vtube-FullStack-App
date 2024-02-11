@@ -20,6 +20,7 @@ import "../App.css";
 import { darkTheme, lightTheme } from "../utils/Theme";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import AuthActions from "../redux/middleware/auth";
+import { baseURL } from "../config/constant";
 import axios from "axios";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
@@ -129,7 +130,7 @@ const ResetPassword = ({ theme }) => {
     const verifyToken = async () => {
       try {
         const apiResponse = await axios.get(
-          `/api/v1/auth/resetpassword/${userId}/${token}`
+          `${baseURL}/v1/auth/resetpassword/${userId}/${token}`
         );
         console.log(apiResponse);
       } catch (error) {

@@ -32,7 +32,7 @@ const UserSignup = (payload) => {
   });
 };
 
-const SignupVerifyOtp = (payload) => {
+const VerifyOtp = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
       const { email, otp } = payload;
@@ -70,6 +70,7 @@ const UserLogin = (payload) => {
           "Content-Type": "application/json",
         },
         method: "POST",
+        credentials: 'include',
         data: {
           email,
           password,
@@ -195,7 +196,7 @@ const ChangePassword = (payload) => {
 
 const AuthActions = {
   UserSignup,
-  SignupVerifyOtp,
+  VerifyOtp,
   UserLogin,
   UserWithGoogle,
   UserLogout,

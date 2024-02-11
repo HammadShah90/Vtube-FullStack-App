@@ -6,6 +6,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Button } from "@mui/material";
 import { toast } from "react-toastify";
 import { darkTheme, lightTheme } from "../utils/Theme";
+import VideosAction from "../redux/middleware/videos";
 import {
   getStorage,
   ref,
@@ -157,10 +158,10 @@ function Upload({ setOpen, theme, setTheme }) {
   const uploadHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/v1/videos", { ...inputs, tags });
-      console.log(res);
+      const apiResponse = await VideosAction.UploadVideo({ ...inputs, tags });
+      console.log(apiResponse);
       setOpen(false);
-      res.status === 200 && navigate(`/video/${res.data.data._id}`);
+      apiResponse.status === 200 && navigate(`/video/${apiResponse.data._id}`);
     } catch (err) {
       console.log(err);
       toast.error("Please fill all the fields", {
